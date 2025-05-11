@@ -34,6 +34,7 @@ public class singleStart : MonoBehaviour
     private IEnumerator LoadGltfBinaryFromMemory(byte[] data)
     {
         var gltf = new GltfImport();
+
         Task<bool> loadTask = gltf.LoadGltfBinary(data);
 
         // 非同期タスクの完了を待ちます
