@@ -51,5 +51,6 @@ class Orbitcamera:
 B = Motor("B")
 A = Motor("A")
 camera = Camera("camera")
-C = Motor("C")
 camera = Orbitcamera("camera")
+C = Servo("C")
+H = Hinge("H")
