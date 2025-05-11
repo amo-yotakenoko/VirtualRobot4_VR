@@ -95,9 +95,12 @@ public class robotSelect : MonoBehaviour
         StartCoroutine(robotpreview.GetComponent<robotPreview>().generate(path));
         robotPreview rp = robotpreview.GetComponent<robotPreview>();
         rp.robotContentUI.transform.SetParent(scrollViewContent);
+        rp.robotContentUI.transform.SetAsLastSibling();
         rp.robotContentUI.transform.localScale = new Vector3(1, 1, 1);
         rp.robotSelect = this;
         rp.toggle.group = GetComponent<ToggleGroup>();
+        rp.toggle.isOn = true;
+        rp.toggle.onValueChanged.Invoke(true);
         robotpreview.transform.position = new Vector3(robotpos, 0, 0);
         robotpos += 10;
 

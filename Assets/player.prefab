@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 6169949546442675134}
   - component: {fileID: 1514200674517655241}
   - component: {fileID: 2592075154592350465}
+  - component: {fileID: 5089823423195015000}
   m_Layer: 0
   m_Name: player
   m_TagString: Player
@@ -262,6 +263,7 @@ MonoBehaviour:
     nodeNameMethod: 0
     animationMethod: 1
     generateMipMaps: 0
+    texturesReadable: 0
     defaultMinFilterMode: 9729
     defaultMagFilterMode: 9729
     anisotropicFilterLevel: 1
@@ -289,7 +291,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gltf: {fileID: 1422742795612470589}
-  partprefab: {fileID: 4000220617328373686, guid: a3ab5ea1efecca445b7675e4ffc1151b, type: 3}
+  partprefab: {fileID: 4000220617328373686, guid: a3ab5ea1efecca445b7675e4ffc1151b,
+    type: 3}
   robotController: {fileID: 906718038420793391}
   parts: []
   colliders: []
@@ -406,7 +409,8 @@ MonoBehaviour:
   datacomplete: 0
   sendTextSize: 1024
   textMesh: {fileID: 5211583884493864911}
-  NetCodePart: {fileID: 3211947520899387043, guid: d5e7c2c0abde10e43b4088c37e1bd5ed, type: 3}
+  NetCodePart: {fileID: 3211947520899387043, guid: d5e7c2c0abde10e43b4088c37e1bd5ed,
+    type: 3}
 --- !u!114 &6169949546442675134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -440,9 +444,22 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8523187551700105784}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e01fe9fe0060c9d48be6dc18794895bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  robotController: {fileID: 906718038420793391}
+--- !u!114 &5089823423195015000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8523187551700105784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6066a668343cce4583a271996fca34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   robotController: {fileID: 906718038420793391}
