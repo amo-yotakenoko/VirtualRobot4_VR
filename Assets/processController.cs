@@ -71,7 +71,7 @@ public class processController : Unity.Netcode.NetworkBehaviour
         {
             for (int i = 0; i < 10; i++)
             {
-                while (commandQueue.Count > 0)
+                while (commandQueue != null && commandQueue.Count > 0)
                 {
                     var command = commandQueue.Dequeue();
                     print($"Name: {command.name}, Property: {command.property}, Value: {command.value}");

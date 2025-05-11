@@ -15,16 +15,16 @@ public class HTTPServerController : MonoBehaviour
     private ConcurrentQueue<Response> responseQueue = new ConcurrentQueue<Response>();
 
 
-
+    public static int port = 8080;
     void Start()
     {
         listener = new HttpListener();
-        listener.Prefixes.Add("http://*:8080/");
+        listener.Prefixes.Add($"http://*:{port}/");
         listener.Start();
 
         serverThread = new Thread(ServerLoop);
         serverThread.Start();
-        Debug.Log("HTTP Server started at http://localhost:8080/");
+        Debug.Log($"HTTP Server started at http://localhost:{port}/");
     }
 
 

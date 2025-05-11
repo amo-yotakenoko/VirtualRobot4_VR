@@ -905,10 +905,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: disconnect
+  m_text: "\u5207\u65AD"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9765866b3ce4ae748966fb453ace3cfc, type: 2}
+  m_sharedMaterial: {fileID: 4480311073002930504, guid: 9765866b3ce4ae748966fb453ace3cfc,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1014,13 +1015,13 @@ RectTransform:
   m_Children:
   - {fileID: 479112695}
   - {fileID: 975506898}
+  - {fileID: 2033549756}
   - {fileID: 1271351112}
   - {fileID: 907971027}
   - {fileID: 1722257952}
   - {fileID: 824836523}
   - {fileID: 828081678}
   - {fileID: 1544715843}
-  - {fileID: 2033549756}
   m_Father: {fileID: 2011688791}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3398,8 +3399,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 92.3, y: 35}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 118.1594, y: 44.0658}
+  m_SizeDelta: {x: 211.0803, y: 48.1315}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1271351113
 MonoBehaviour:
@@ -3686,10 +3687,11 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: rescue
+  m_text: "\u30ED\u30DC\u30C3\u30C8\u3092\u623B\u3059"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 9765866b3ce4ae748966fb453ace3cfc, type: 2}
+  m_sharedMaterial: {fileID: 4480311073002930504, guid: 9765866b3ce4ae748966fb453ace3cfc,
+    type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5230,8 +5232,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 91.3, y: 67.3}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 116.840126, y: 95.88737}
+  m_SizeDelta: {x: 211.0803, y: 48.1315}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2033549757
 MonoBehaviour:
