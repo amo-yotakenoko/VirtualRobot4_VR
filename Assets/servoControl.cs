@@ -33,7 +33,7 @@ public class servoControl : MonoBehaviour
         float maxspeed = 100;
 
         motor.targetVelocity = Mathf.Clamp((angle - nowInputAngle) * speed, -maxspeed, maxspeed);
-
+        motor.force = 1000f;
         HingeJoint.motor = motor;
     }
 }
