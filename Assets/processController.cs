@@ -37,13 +37,19 @@ public class processController : Unity.Netcode.NetworkBehaviour
             // C:\Users\taken\projects\VirtualRobot4\Assets\robots\test.py
             // processname = GameObject.Find("FileNameInput").GetComponent<TMP_InputField>().text;
             // argument = GameObject.Find("ArgumentsInput").GetComponent<TMP_InputField>().text;
+            print("processname" + processname);
+            print("argument" + argument);
             if (processname == "" || argument == "")
             {
                 print("プロセスできない");
 
             }
-            commandQueue = new Queue<(string name, string property, float value)>();
-            startprocess(processname, argument);
+            else
+            {
+                commandQueue = new Queue<(string name, string property, float value)>();
+                startprocess(processname, argument);
+
+            }
         }
     }
 

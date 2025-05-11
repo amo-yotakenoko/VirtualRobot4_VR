@@ -133,6 +133,8 @@ public class robotSelect : MonoBehaviour
         processPath = "";
         programPath = "";
         glbFullPath = "";
+        processController.processname = "";
+        processController.argument = "";
         foreach (string file in files)
         {
             if (Path.GetExtension(file) == ".glb")
