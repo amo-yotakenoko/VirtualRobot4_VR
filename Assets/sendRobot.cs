@@ -217,8 +217,33 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             StartCoroutine(generate());
             Destroy(textMesh.gameObject);
             netWorkUI.pause = false;
+
+            cacheRobotFile();
         }
     }
+
+    void cacheRobotFile()
+    {
+        byte[] bytes = Convert.FromBase64String(data64);
+
+        string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "robotCache");
+
+        // フォルダが存在しない場合は作成
+        if (!Directory.Exists(cacheFolderPath))
+        {
+            Directory.CreateDirectory(cacheFolderPath);
+        }
+
+        // ファイル名（例：robot_{robotname}.glb）を設定
+        string fileName = $"robot_{robotname.Value}.glb";
+        string fullPath = Path.Combine(cacheFolderPath, fileName);
+
+        // バイト配列をファイルに保存
+        File.WriteAllBytes(fullPath, bytes);
+
+        Debug.Log($"GLBファイルを保存しました: {fullPath}");
+    }
+
     public GameObject NetCodePart;
     IEnumerator generate()
     {
