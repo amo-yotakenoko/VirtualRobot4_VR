@@ -29,6 +29,11 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
     public bool datacomplete;
 
+    public NetworkVariable<int> fileHash = new NetworkVariable<int>(0,
+    NetworkVariableReadPermission.Everyone, // 全員が読み取れる
+    NetworkVariableWritePermission.Owner     // オーナーのみ書き込める
+    );
+
     // public TMP_InputField passField;
     public override void OnNetworkSpawn()
     {
@@ -47,7 +52,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         NetworkManager networkManager = NetworkManager.Singleton;
         // transform.position = new Vector3(0, 0, this.OwnerClientId * 10);
         gameObject.name += NetworkObject.IsLocalPlayer.ToString();
-        if (NetworkObject.IsLocalPlayer)
+        if (NetworkObject.IsOwner)
         {
             print("id" + NetworkManager.Singleton.LocalClientId);
             // filePath = GameObject.Find("glbPassInput").GetComponent<TMP_InputField>().text.Replace("\"", "");
@@ -58,8 +63,13 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             // filePath = @$"./test1.glb";
 
             data64 = FileToBase64(filePath);
+
             if (this.IsServer)
+            {
+
+                fileHash.Value = FNV1a(data64);
                 datacomplete = true;
+            }
             else
                 StartCoroutine(sendToServer());
 
@@ -96,6 +106,63 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         }
         // }
     }
+
+
+    public int sendTextSize;
+    private IEnumerator sendToServer()
+    {
+
+        int length = data64.Length;
+        // string text = "文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト";
+        for (int i = 0; i < data64.Length; i += sendTextSize)
+        {
+            // 10文字ずつ表示する
+            // Debug.Log(text.Substring(i, Mathf.Min(10, text.Length - i)));
+            string t = data64.Substring(i, Mathf.Min(sendTextSize, data64.Length - i));
+            ReceiveDataServerRpc(t, length);
+            textMesh.text = $"{i}/{length}\n{(int)(((float)i / length) * 100)}%";
+            yield return null;
+        }
+        // Destroy(textMesh.gameObject);
+        print("送信終わり");
+        datacomplete = true;
+        // StartCoroutine(generate(File.ReadAllBytes(filePath)))
+    }
+    [ServerRpc]
+    private void ReceiveDataServerRpc(string data, int length)
+    {
+        // print(data);
+        data64 += data;
+        textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
+        if (data64.Length == length)
+        {
+            datacomplete = true;
+            // print(data64);
+            // GetComponent<generateRobot>().isServer = true;
+            // StartCoroutine(generateRobot());
+        }
+    }
+
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void ReceiveDataClientRpc(string data, int length, ulong robotId, RpcParams rpcParams = default)
+    {
+        // print(data);
+        print("robotId:" + robotId + "を受け取った" + "長さ" + data);
+        if (robotId == this.OwnerClientId)
+        {
+
+            data64 += data;
+            textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
+            if (data64.Length == length)
+            {
+                // print(data64);
+                datacomplete = true;
+                // StartCoroutine(generateRobot());
+            }
+        }
+    }
+
 
 
 
@@ -135,63 +202,13 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     }
 
 
-    [Rpc(SendTo.SpecifiedInParams)]
-    private void ReceiveDataClientRpc(string data, int length, ulong robotId, RpcParams rpcParams = default)
-    {
-        // print(data);
-        print("robotId:" + robotId + "を受け取った" + "長さ" + data);
-        if (robotId == this.OwnerClientId)
-        {
-
-            data64 += data;
-            textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
-            if (data64.Length == length)
-            {
-                // print(data64);
-                datacomplete = true;
-                // StartCoroutine(generateRobot());
-            }
-        }
-    }
 
 
 
 
-    public int sendTextSize;
-    private IEnumerator sendToServer()
-    {
 
-        int length = data64.Length;
-        // string text = "文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト文字列のテスト";
-        for (int i = 0; i < data64.Length; i += sendTextSize)
-        {
-            // 10文字ずつ表示する
-            // Debug.Log(text.Substring(i, Mathf.Min(10, text.Length - i)));
-            string t = data64.Substring(i, Mathf.Min(sendTextSize, data64.Length - i));
-            ReceiveDataServerRpc(t, length);
-            textMesh.text = $"{i}/{length}\n{(int)(((float)i / length) * 100)}%";
-            yield return null;
-        }
-        // Destroy(textMesh.gameObject);
-        print("送信終わり");
-        datacomplete = true;
-        // StartCoroutine(generate(File.ReadAllBytes(filePath)))
-    }
 
-    [ServerRpc]
-    private void ReceiveDataServerRpc(string data, int length)
-    {
-        // print(data);
-        data64 += data;
-        textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
-        if (data64.Length == length)
-        {
-            datacomplete = true;
-            // print(data64);
-            // GetComponent<generateRobot>().isServer = true;
-            // StartCoroutine(generateRobot());
-        }
-    }
+
 
     // IEnumerator generateRobot()
     // {
@@ -318,8 +335,6 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     }
 
 
-
-
     string FileToBase64(string filePath)
     {
         print(filePath);
@@ -335,6 +350,28 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         // バイト配列をBase64文字列に変換する
         string base64String = Convert.ToBase64String(fileBytes);
 
+
+
         return base64String;
+    }
+
+    // string FileToBase64(string filePath, out int hash)
+    // {
+    //     string base64String = FileToBase64(filePath);
+    //     hash = FNV1a(base64String);
+    // }
+    int FNV1a(string file)
+    {
+        const int fnvPrime = 16777619;
+        const int fnvOffsetBasis = unchecked((int)2166136261);
+        int h = fnvOffsetBasis;
+
+        foreach (char c in file)
+        {
+            h ^= c;
+            h *= fnvPrime;
+        }
+
+        return h;
     }
 }
