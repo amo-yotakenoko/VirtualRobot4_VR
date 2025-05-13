@@ -17,6 +17,7 @@ using TMPro;
 using Unity.Netcode;
 using Unity.Mathematics;
 using UnityEngine.SceneManagement;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 public class sendRobot : Unity.Netcode.NetworkBehaviour
 {
@@ -37,6 +38,9 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     // public TMP_InputField passField;
     public override void OnNetworkSpawn()
     {
+
+        fileHash.OnValueChanged += OnFileHashUpdate;
+        OnFileHashUpdate(0, fileHash.Value);
         if (NetworkManager.Singleton.IsServer)
         {
             // robotname.Value = $"{Guid.NewGuid()}";
@@ -52,39 +56,48 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         NetworkManager networkManager = NetworkManager.Singleton;
         // transform.position = new Vector3(0, 0, this.OwnerClientId * 10);
         gameObject.name += NetworkObject.IsLocalPlayer.ToString();
+
         if (NetworkObject.IsOwner)
         {
-            print("id" + NetworkManager.Singleton.LocalClientId);
-            // filePath = GameObject.Find("glbPassInput").GetComponent<TMP_InputField>().text.Replace("\"", "");
-            if (filePath == "")
-                filePath = robotSelect.glbFullPath;
-            print("filePath" + filePath);
-            // filePath = @$"C:/Users/taken/projects/VirtualRobot4/robot1/test1.glb";
-            // filePath = @$"./test1.glb";
 
-            data64 = FileToBase64(filePath);
-
-            if (this.IsServer)
-            {
-
-                fileHash.Value = FNV1a(data64);
-                datacomplete = true;
-            }
-            else
-                StartCoroutine(sendToServer());
+            ownerLoad();
 
 
         }
-        else if (NetworkManager.Singleton.IsServer && filePath != "")
-        {
-            // print("field");
-            data64 = FileToBase64(filePath);
 
-            // this.gameObject.MoveScenes(robot);
-            datacomplete = true;
+        // if (NetworkObject.IsOwner)
+        // {
+        //     print("id" + NetworkManager.Singleton.LocalClientId);
+        //     // filePath = GameObject.Find("glbPassInput").GetComponent<TMP_InputField>().text.Replace("\"", "");
+        //     if (filePath == "")
+        //         filePath = robotSelect.glbFullPath;
+        //     print("filePath" + filePath);
+        //     // filePath = @$"C:/Users/taken/projects/VirtualRobot4/robot1/test1.glb";
+        //     // filePath = @$"./test1.glb";
+
+        //     data64 = FileToBase64(filePath);
+
+        //     if (this.IsServer)
+        //     {
+
+        //         fileHash.Value = FNV1a(data64);
+        //         datacomplete = true;
+        //     }
+        //     else
+        //         StartCoroutine(sendToServer());
 
 
-        }
+        // }
+        // else if (NetworkManager.Singleton.IsServer && filePath != "")
+        // {
+        //     // print("field");
+        //     data64 = FileToBase64(filePath);
+
+        //     // this.gameObject.MoveScenes(robot);
+        //     datacomplete = true;
+
+
+        // }
 
 
 
@@ -97,14 +110,70 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
         // if (!this.IsOwner && networkManager.IsClient)
         // {
-        print("クライアント");
-        if (!NetworkManager.Singleton.IsServer && data64.Length == 0)
-        {
-            this.name += "データほしい";
-            print("データほしい1" + NetworkManager.Singleton);
-            WantDataServerRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId);
-        }
+        // print("クライアント");
+        // if (!NetworkManager.Singleton.IsServer && data64.Length == 0)
+        // {
+        //     this.name += "データほしい";
+        //     print("データほしい1" + NetworkManager.Singleton);
+        //     WantDataServerRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId);
         // }
+        // }
+    }
+
+
+    //普通に読み込む
+    void ownerLoad()
+    {
+        // filePath = GameObject.Find("glbPassInput").GetComponent<TMP_InputField>().text.Replace("\"", "");
+        if (filePath == "")
+            filePath = robotSelect.glbFullPath;
+        print("filePath" + filePath);
+        // filePath = @$"C:/Users/taken/projects/VirtualRobot4/robot1/test1.glb";
+        // filePath = @$"./test1.glb";
+
+        data64 = FileToBase64(filePath);
+        datacomplete = true;
+        fileHash.Value = FNV1a(data64);
+        // Destroy(textMesh.gameObject);
+        StartCoroutine(generate());
+    }
+
+
+    void OnFileHashUpdate(int previousValue, int newValue)
+    {
+        if (newValue == 0) return;
+        if (datacomplete) return;
+
+
+        print("ハッシュ更新");
+        // if (this.IsServer)
+        // {
+
+        //     fileHash.Value = FNV1a(data64);
+        //     datacomplete = true;
+        // }
+        string cacheFilePath = getcacheRobotFile();
+        if (cacheFilePath != null)
+        {
+            print("キャッシュを発見" + cacheFilePath);
+            data64 = FileToBase64(cacheFilePath);
+            datacomplete = true;
+            // Destroy(textMesh.gameObject);
+            StartCoroutine(generate());
+            return;
+        }
+
+        if (this.IsClient && !this.IsServer)
+        {
+            if (NetworkObject.IsOwner)
+            {
+                StartCoroutine(sendToServer());
+            }
+            else
+            {
+                WantDataServerRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId);
+            }
+        }
     }
 
 
@@ -131,37 +200,20 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     [ServerRpc]
     private void ReceiveDataServerRpc(string data, int length)
     {
+        if (datacomplete) return;
         // print(data);
         data64 += data;
         textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
         if (data64.Length == length)
         {
             datacomplete = true;
+            cacheRobotFile();
             // print(data64);
             // GetComponent<generateRobot>().isServer = true;
-            // StartCoroutine(generateRobot());
+            StartCoroutine(generate());
         }
     }
 
-
-    [Rpc(SendTo.SpecifiedInParams)]
-    private void ReceiveDataClientRpc(string data, int length, ulong robotId, RpcParams rpcParams = default)
-    {
-        // print(data);
-        print("robotId:" + robotId + "を受け取った" + "長さ" + data);
-        if (robotId == this.OwnerClientId)
-        {
-
-            data64 += data;
-            textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
-            if (data64.Length == length)
-            {
-                // print(data64);
-                datacomplete = true;
-                // StartCoroutine(generateRobot());
-            }
-        }
-    }
 
 
 
@@ -196,10 +248,33 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             yield return null;
         }
         SendToClientComplete = true;
-        Destroy(textMesh.gameObject);
+        // Destroy(textMesh.gameObject);
 
         // StartCoroutine(generate(File.ReadAllBytes(filePath)))
     }
+
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void ReceiveDataClientRpc(string data, int length, ulong robotId, RpcParams rpcParams = default)
+    {
+        if (datacomplete) return;
+        // print(data);
+        print("robotId:" + robotId + "を受け取った" + "長さ" + data);
+        if (robotId == this.OwnerClientId)
+        {
+
+            data64 += data;
+            textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
+            if (data64.Length == length)
+            {
+                // print(data64);
+                datacomplete = true;
+                cacheRobotFile();
+                StartCoroutine(generate());
+            }
+        }
+    }
+
 
 
 
@@ -225,25 +300,25 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     bool generated = false;
     void Update()
     {
-        this.name = $"{robotname.Value}";
-        // textMesh.text = data64.Length.ToString() + ":" + datacomplete.ToString() + "\n" + this.OwnerClientId + ((int)this.OwnerClientId == (int)NetworkManager.Singleton.LocalClientId ? "\nme" : "");
-        if (generated == false && datacomplete == true)
-        {
-            print("生成準備OK");
-            generated = true;
-            StartCoroutine(generate());
-            Destroy(textMesh.gameObject);
-            netWorkUI.pause = false;
+        // this.name = $"{robotname.Value}";
+        // // textMesh.text = data64.Length.ToString() + ":" + datacomplete.ToString() + "\n" + this.OwnerClientId + ((int)this.OwnerClientId == (int)NetworkManager.Singleton.LocalClientId ? "\nme" : "");
+        // if (generated == false && datacomplete == true)
+        // {
+        //     print("生成準備OK");
+        //     generated = true;
+        //     StartCoroutine(generate());
+        //     Destroy(textMesh.gameObject);
+        //     netWorkUI.pause = false;
 
-            cacheRobotFile();
-        }
+        //     cacheRobotFile();
+        // }
     }
 
     void cacheRobotFile()
     {
         byte[] bytes = Convert.FromBase64String(data64);
 
-        string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), "robotCache");
+        string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), ".robotCache");
 
         // フォルダが存在しない場合は作成
         if (!Directory.Exists(cacheFolderPath))
@@ -252,14 +327,37 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         }
 
         // ファイル名（例：robot_{robotname}.glb）を設定
-        string fileName = $"robot_{robotname.Value}.glb";
+        string fileName = $"robot_{fileHash.Value}.glb";
         string fullPath = Path.Combine(cacheFolderPath, fileName);
 
         // バイト配列をファイルに保存
         File.WriteAllBytes(fullPath, bytes);
 
-        Debug.Log($"GLBファイルを保存しました: {fullPath}");
     }
+
+    string getcacheRobotFile()
+    {
+        string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), ".robotCache");
+
+        // フォルダが存在しない場合は作成
+        if (!Directory.Exists(cacheFolderPath))
+        {
+            Directory.CreateDirectory(cacheFolderPath);
+        }
+
+
+        string fileName = $"robot_{fileHash.Value}.glb";
+        string fullPath = Path.Combine(cacheFolderPath, fileName);
+
+
+        if (File.Exists(fullPath))
+        {
+            return fullPath;
+        }
+        return null;
+
+    }
+
 
     public GameObject NetCodePart;
     IEnumerator generate()
@@ -341,7 +439,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         // ファイルが存在しない場合は例外をスローする
         if (!File.Exists(filePath))
         {
-            throw new FileNotFoundException("指定されたファイルが見つかりません。", filePath);
+            throw new FileNotFoundException($"{filePath}指定されたファイルが見つかりません。", filePath);
         }
 
         // ファイルをバイト配列として読み込む
@@ -372,6 +470,6 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             h *= fnvPrime;
         }
 
-        return h;
+        return Math.Abs(h);
     }
 }

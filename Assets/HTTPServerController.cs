@@ -96,7 +96,7 @@ public class HTTPServerController : MonoBehaviour
                         {
                             break; // 取れたら抜ける
                         }
-                        Thread.Sleep(10); // 少し待ってから再試行（CPU負荷軽減）
+                        Thread.Sleep(1); // 少し待ってから再試行（CPU負荷軽減）
                     }
                     // レスポンスを設定
                     string responseText = JsonUtility.ToJson(responseData);
@@ -120,15 +120,18 @@ public class HTTPServerController : MonoBehaviour
 
     void Update()
     {
-        // キューから順にエントリを取り出して処理
-        while (requestQueue.TryDequeue(out var entry))
+        for (int i = 0; i < 10; i++)
         {
-            // エントリの情報を表示（ここではidとレスポンスの内容を表示）
-            print($"ID: {entry.id}, Request: {entry.requestText}");
+            // キューから順にエントリを取り出して処理
+            while (requestQueue.TryDequeue(out var entry))
+            {
+                // エントリの情報を表示（ここではidとレスポンスの内容を表示）
+                print($"ID: {entry.id}, Request: {entry.requestText}");
 
-            Response responseData = commandExecute(entry.requestText);
-            responseData.id = entry.id;
-            responseQueue.Enqueue(responseData);
+                Response responseData = commandExecute(entry.requestText);
+                responseData.id = entry.id;
+                responseQueue.Enqueue(responseData);
+            }
         }
     }
 

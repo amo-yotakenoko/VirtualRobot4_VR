@@ -77,11 +77,19 @@ public class robotSelect : MonoBehaviour
             var subdirectories = Directory.GetDirectories(currentDirectory);
             foreach (var subdir in subdirectories)
             {
+
+                if ((File.GetAttributes(subdir) & FileAttributes.Hidden) != 0 ||
+                Path.GetFileName(subdir).StartsWith("."))
+
+                    continue;
+
                 directoriesToProcess.Enqueue(subdir);
+                yield return new WaitForSeconds(0.1f);
             }
 
             // 1フレーム待機して処理を中断
             yield return null;
+
         }
     }
 
