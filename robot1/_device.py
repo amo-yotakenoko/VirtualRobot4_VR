@@ -48,10 +48,9 @@ class Camera:
 class Orbitcamera:
     def __init__(self, name):
         self.name = name
-B = Motor("B")
-A = Motor("A")
 L = Light("L")
 camera = Camera("camera")
-C = Servo("C")
 camera = Orbitcamera("camera")
+A = Motor("A")
+B = Motor("B")
 D = Servo("D")
