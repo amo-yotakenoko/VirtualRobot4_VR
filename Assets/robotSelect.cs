@@ -84,7 +84,7 @@ public class robotSelect : MonoBehaviour
                     continue;
 
                 directoriesToProcess.Enqueue(subdir);
-                yield return new WaitForSeconds(0.1f);
+                // yield return new WaitForSeconds(0.1f);
             }
 
             // 1フレーム待機して処理を中断
