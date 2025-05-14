@@ -407,6 +407,8 @@ MonoBehaviour:
         byte0061: 0
   data64: 
   datacomplete: 0
+  fileHash:
+    m_InternalValue: 0
   sendTextSize: 1024
   textMesh: {fileID: 5211583884493864911}
   NetCodePart: {fileID: 3211947520899387043, guid: d5e7c2c0abde10e43b4088c37e1bd5ed,
@@ -444,7 +446,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8523187551700105784}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e01fe9fe0060c9d48be6dc18794895bf, type: 3}
   m_Name: 
@@ -463,3 +465,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   robotController: {fileID: 906718038420793391}
+  requestId: 0

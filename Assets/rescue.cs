@@ -22,9 +22,12 @@ using Unity.Netcode;
 public class rescue : Unity.Netcode.NetworkBehaviour
 {
     // Start is called before the first frame update
+
+    //シングルトンパターン(?)
+    public static rescue Instance;
     void Start()
     {
-
+        Instance = this;
     }
 
     // Update is called once per frame

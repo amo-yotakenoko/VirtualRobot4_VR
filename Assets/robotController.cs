@@ -42,7 +42,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         {
             Vector3 offset = new Vector3(command.x, command.y, command.z);
             print("teleport" + offset);
-            FindObjectsOfType<rescue>().FirstOrDefault().rescueStart(offset);
+            rescue.Instance.rescueStart(offset);
             responseData.value = "1";
 
         }

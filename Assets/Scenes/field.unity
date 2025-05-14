@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 1117912266894500611, guid: 0ca9cde63cb088e4e94232a5095b3030,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1117912266894500611, guid: 0ca9cde63cb088e4e94232a5095b3030,
         type: 3}
@@ -188,7 +188,7 @@ PrefabInstance:
     - target: {fileID: 2196145338180173806, guid: 0ca9cde63cb088e4e94232a5095b3030,
         type: 3}
       propertyPath: filePath
-      value: C:\Users\taken\projects\VirtualRobot4\field\field.glb
+      value: field\field.glb
       objectReference: {fileID: 0}
     - target: {fileID: 7458082544947125998, guid: 0ca9cde63cb088e4e94232a5095b3030,
         type: 3}
@@ -208,12 +208,16 @@ PrefabInstance:
     - target: {fileID: 8523187551700105784, guid: 0ca9cde63cb088e4e94232a5095b3030,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7980551310464607333, guid: 0ca9cde63cb088e4e94232a5095b3030,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: 0ca9cde63cb088e4e94232a5095b3030, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
