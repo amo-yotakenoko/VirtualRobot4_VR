@@ -39,12 +39,6 @@ public class HTTPServerController : MonoBehaviour
             return $"ResponseEntry {{ id = {id}, Request = \"{requestText}\"";
         }
     }
-    [System.Serializable]
-    public class Response
-    {
-        public string value = "0";
-        public int id;
-    }
 
 
 
@@ -104,7 +98,7 @@ public class HTTPServerController : MonoBehaviour
                     byte[] buffer = Encoding.UTF8.GetBytes(responseText);
                     response.ContentLength64 = buffer.Length;
                     response.OutputStream.Write(buffer, 0, buffer.Length);
-                    response.OutputStream.Close(); // ← これが重要
+                    response.OutputStream.Close();
                 }
 
 
@@ -128,62 +122,16 @@ public class HTTPServerController : MonoBehaviour
                 // エントリの情報を表示（ここではidとレスポンスの内容を表示）
                 print($"ID: {entry.id}, Request: {entry.requestText}");
 
-                Response responseData = commandExecute(entry.requestText);
+                Response responseData = robotController.commandExecute(entry.requestText);
                 responseData.id = entry.id;
                 responseQueue.Enqueue(responseData);
             }
         }
     }
 
-    private Response commandExecute(string commandText)
-    {
-        Response responseData = new Response();
-        print("commandText: " + commandText);
-        CommandData command = JsonUtility.FromJson<CommandData>(commandText);
-
-        if (robotController != null)
-        {
-
-            if (command.type == "set")
-            {
-                var parts = command.key.Split('.');
-                if (parts.Length == 2)
-                {
-
-                    string name = parts[0];
-                    string property = parts[1];
-                    // Debug.Log($"First: {first}, Second: {second}");
-                    float value = float.Parse(command.value); // value
-                    robotController.setvalue(name, property, value);
-                    responseData.value = "1";
-                }
-            }
-            else if (command.type == "get")
-            {
-                string result = response(command.key);
-                responseData.value = result;
-
-            }
 
 
-        }
-        return responseData;
-    }
 
-    string response(string key)
-    {
-        var parts = key.Split('.');
-        if (parts.Length == 2)
-        {
-            if (parts[0] == "key")
-            {
-                print(parts[1]);
-                return $"{Input.GetKey(parts[1])}";
-            }
-
-        }
-        return "";
-    }
 
     void OnDestroy()
     {
@@ -201,3 +149,9 @@ public class HTTPServerController : MonoBehaviour
 }
 
 
+[System.Serializable]
+public class Response
+{
+    public string value = "0";
+    public int id;
+}

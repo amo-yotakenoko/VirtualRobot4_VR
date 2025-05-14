@@ -32,9 +32,16 @@ public class rescue : Unity.Netcode.NetworkBehaviour
     {
 
     }
+
     public void rescueStart()
     {
-        player.ownerPlayer.rescueServerRpc();
+        rescueStart(new Vector3(0, 0, 0));
+    }
+    public void rescueStart(Vector3 offset)
+    {
+
+
+        player.ownerPlayer.rescueServerRpc(offset);
     }
 
 }

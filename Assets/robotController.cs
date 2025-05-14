@@ -8,29 +8,68 @@ using System;
 using Unity.Netcode;
 public class robotController : Unity.Netcode.NetworkBehaviour
 {
-    // Start is called before the first frame update
-    // public List<string> jsons;
-    void Start()
+
+
+    public Response commandExecute(string commandText)
     {
-        // foreach (var json in jsons)
-        // {
+        Response responseData = new Response();
+        print("commandText: " + commandText);
+        CommandData command = JsonUtility.FromJson<CommandData>(commandText);
 
 
-        //     addDevice(json);
 
-        // }
+        if (command.type == "set")
+        {
+            var parts = command.key.Split('.');
+            if (parts.Length == 2)
+            {
 
+                string name = parts[0];
+                string property = parts[1];
+                // Debug.Log($"First: {first}, Second: {second}");
+                float value = float.Parse(command.value); // value
+                setvalue(name, property, value);
+                responseData.value = "1";
+            }
+        }
+        else if (command.type == "get")
+        {
+            string result = response(command.key);
+            responseData.value = result;
+
+        }
+        else if (command.type == "teleport")
+        {
+            Vector3 offset = new Vector3(command.x, command.y, command.z);
+            print("teleport" + offset);
+            FindObjectsOfType<rescue>().FirstOrDefault().rescueStart(offset);
+            responseData.value = "1";
+
+        }
+
+
+
+        return responseData;
     }
-    void Update()
+
+
+    string response(string key)
     {
-        // foreach (var device in deviceList)
-        // {
-        //     print(device);
-        //     if (device.GetType() == typeof(servo)){
+        var parts = key.Split('.');
+        if (parts.Length == 2)
+        {
+            if (parts[0] == "key")
+            {
+                print(parts[1]);
+                return $"{Input.GetKey(parts[1])}";
+            }
 
-        //     }
-        // }
+        }
+        return "";
     }
+
+
+
     public void test()
     {
         print("test");

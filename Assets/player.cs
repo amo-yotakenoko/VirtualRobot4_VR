@@ -35,13 +35,13 @@ public class player : Unity.Netcode.NetworkBehaviour
 
     }
     [Rpc(SendTo.Server)]
-    public void rescueServerRpc()
+    public void rescueServerRpc(Vector3 offset)
     {
         foreach (var p in GetComponent<generateRobot>().partspos)
         {
             // p.Key.transform.localPosition = p.Value;
             // p.Key.transform.rotation = Quaternion.identity;
-            StartCoroutine(MovePartToPosition(p.Key, p.Value));
+            StartCoroutine(MovePartToPosition(p.Key, p.Value + offset));
         }
     }
 

@@ -76,7 +76,7 @@ public class WebSocketController : Unity.Netcode.NetworkBehaviour
     }
 
 
-
+    //TODO robotcontollorに統合予定
     private void commandParse(string commandText)
     {
         CommandData command = JsonUtility.FromJson<CommandData>(commandText);
@@ -130,6 +130,10 @@ public class CommandData
     public string key;
     public string value;
     public int id;
+
+    public float x;
+    public float y;
+    public float z;
 }
 
 
