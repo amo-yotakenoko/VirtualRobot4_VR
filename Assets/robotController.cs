@@ -64,6 +64,12 @@ public class robotController : Unity.Netcode.NetworkBehaviour
                 return $"{Input.GetKey(parts[1])}";
             }
 
+            if (parts[0] == "VRright" || parts[0] == "VRleft")
+            {
+                return VRManager.GetControllerInput(parts[0], parts[1]);
+            }
+
+
         }
         return "";
     }
