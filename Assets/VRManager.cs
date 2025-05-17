@@ -7,11 +7,17 @@ using UnityEngine.XR;
 public class VRManager : MonoBehaviour
 {
     public GameObject XROrigin;
+    public bool simulatorMode;
+    public GameObject XRdeviceSimulator;
 
     void Start()
     {
         // 10秒ごとにチェックするコルーチン開始
         StartCoroutine(CheckHandTracking());
+        if (simulatorMode)
+        {
+            Instantiate(XRdeviceSimulator);
+        }
     }
 
     void Update()
@@ -23,6 +29,7 @@ public class VRManager : MonoBehaviour
 
     IEnumerator CheckHandTracking()
     {
+
         while (true)
         {
             isVRMode = IsHandTrackingAvailable();
@@ -54,8 +61,9 @@ public class VRManager : MonoBehaviour
 
 
 
-    public static bool IsHandTrackingAvailable()
+    public bool IsHandTrackingAvailable()
     {
+        if (simulatorMode) return true;
         List<InputDevice> devices = new List<InputDevice>();
         InputDevices.GetDevices(devices);
 
