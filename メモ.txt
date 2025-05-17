@@ -1,0 +1,46 @@
+
+
+windowsの方で
+ping fe80::2a0:deff:fe27:6c0   
+してから
+telnet fe80::2a0:deff:fe27:6c0   
+で接続できた
+
+
+
+
+RTX1000 BootROM Ver. 1.04
+
+RTX1000 Rev.7.00.29 (Tue Nov 18 20:44:16 2003) ⇒RTX1000 Rev.8.01.29 (Fri Apr 15 11:50:44 2011) 
+  Copyright (c) 1994-2003 Yamaha Corporation.
+  Copyright (c) 1991-1997 Regents of the University of California.
+  Copyright (c) 1995-1996 Jean-loup Gailly and Mark Adler.
+  Copyright (c) 1998-2000 Tokyo Institute of Technology.
+  Copyright (c) 2000 Japan Advanced Institute of Science and Technology, HOKURIKU.
+  Copyright (c) 2002 RSA Security Inc. All rights reserved.
+00:a0:de:27:06:c0, 00:a0:de:27:06:c1, 00:a0:de:27:06:c2
+Memory 16Mbytes, 3LAN, 1BRI
+>help
+
+administrator
+
+
+date 2025/05/17
+time 22:32:00
+timezone jst
+save
+ip lan1 address 192.168.101.254/24
+ip lan2 address 192.168.102.254/24
+
+dhcp service server
+dhcp scope 1 192.168.101.100-192.168.101.200/24
+dhcp scope 2 192.168.102.100-192.168.102.200/24
+
+ip lan3 address 192.168.1.100/24
+
+ip route default gateway 192.168.1.1
+
+#cold start
+
+
+tftp -i 192.168.101.254 put firmware\rtx1000.bin exec
