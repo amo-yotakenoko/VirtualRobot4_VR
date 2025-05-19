@@ -214,7 +214,23 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         }
     }
 
+    [ServerRpc]
+    public void destroyRobotServerRpc()
+    {
+        foreach (var part in GetComponent<generateRobot>().parts)
+        {
+            part.GetComponent<NetworkObject>().Despawn();
+            Destroy(part);
+        }
+        // Destroy(this.gameObject);
+    }
 
+    // [ServerRpc]
+    // public void reloadRobotServerRpc()
+    // {
+    //     destroyRobotServerRpc();
+
+    // }
 
 
 

@@ -30,6 +30,8 @@ public class generateRobot : MonoBehaviour
 
     public IEnumerator generate(byte[] robotbyte, bool isServer = false, bool isOwner = true, string name = "robot")
     {
+        parts = new List<GameObject>();
+        partspos = new Dictionary<GameObject, Vector3>();
         // print("1");
         // byte[] robotbyte = File.ReadAllBytes(filePath);
         // print("2");
