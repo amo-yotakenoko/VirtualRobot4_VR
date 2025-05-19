@@ -25,7 +25,7 @@ public class WebSocketServerLauncher : MonoBehaviour
         // print("サーバ?");
         if (ws == null) serverStart();
     }
-
+    int port = 12345;
 
     void serverStart()
     {
@@ -33,7 +33,8 @@ public class WebSocketServerLauncher : MonoBehaviour
         // string certificatePassword = "virtual"; // パスワードを指定
 
         // WebSocketServerをポート番号で初期化
-        ws = new WebSocketServer("ws://localhost:12345");  // true = secure (wss)
+        port = int.Parse(Settings.load("WebSocketport", "12345"));
+        ws = new WebSocketServer($"ws://localhost:{port}");  // true = secure (wss)
 
         // // サーバー証明書を設定
         // ws.SslConfiguration.ServerCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2(certificatePath, certificatePassword);

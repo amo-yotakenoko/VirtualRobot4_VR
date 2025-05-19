@@ -50,6 +50,7 @@ public class robotSelect : MonoBehaviour
         // // #endif
         print(Directory.GetCurrentDirectory());
         StartCoroutine(GetAllFilesCoroutine(currentDirectory));
+        IpPortInput.text = Settings.load("server", "127.0.0.1:7777");
     }
 
     IEnumerator GetAllFilesCoroutine(string rootDirectory)
@@ -205,6 +206,7 @@ public class robotSelect : MonoBehaviour
 
     public void StartClient()
     {
+        Settings.save("server", IpPortInput.text);
         print(IpPortInput.text);
         if (new Regex(@"^[A-Z0-9]{6}$").IsMatch(IpPortInput.text))
         {

@@ -18,6 +18,9 @@ public class HTTPServerController : MonoBehaviour
     public static int port = 8080;
     void Start()
     {
+        port = int.Parse(Settings.load("HTTPport", "8080"));
+
+
         listener = new HttpListener();
         listener.Prefixes.Add($"http://*:{port}/");
         listener.Start();
