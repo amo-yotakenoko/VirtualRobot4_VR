@@ -8,7 +8,8 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Text;
-
+using UnityEngine.XR.Interaction.Toolkit;
+using UnityEngine.XR.Interaction.Toolkit.Transformers;
 
 
 public class generateRobot : MonoBehaviour
@@ -76,7 +77,7 @@ public class generateRobot : MonoBehaviour
             }
         }
 
-
+        SetXRGrabInteractable(parts);
 
     }
 
@@ -220,7 +221,7 @@ public class generateRobot : MonoBehaviour
         foreach (GameObject part in parts)
         {
             Rigidbody rb = part.AddComponent<Rigidbody>();
-            rb.isKinematic = true;
+            if (rb != null) rb.isKinematic = true;
         }
         foreach (GameObject part in parts)
         {
@@ -820,6 +821,115 @@ public class generateRobot : MonoBehaviour
         else
         {
             print("Failed to load glTF binary.");
+        }
+    }
+
+
+
+    public void SetXRGrabInteractable(List<GameObject> parts)
+    {
+        print("SetXRGrabInteractable1");
+        foreach (GameObject part in parts)
+        {
+
+            var grabInteractable = part.AddComponent<UnityEngine.XR.Interaction.Toolkit.Interactables.XRGrabInteractable>();
+
+            // XRGeneralGrabTransformer を追加
+            var grabTransformer = part.AddComponent<XRGeneralGrabTransformer>();
+            // 一般的な掴み動作のトランスフォーマーを追加
+            part.AddComponent<XRGeneralGrabTransformer>();
+
+            // Interaction Layer（デフォルト）
+            // grabInteractable.interactionLayers = InteractionLayerMask.GetMask("Default");
+
+            // 距離の計算モード：コライダーの中心位置
+            grabInteractable.distanceCalculationMode = UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable.DistanceCalculationMode.ColliderPosition;
+
+            // 選択モード：複数のInteractorと同時に選択可能
+            grabInteractable.selectMode = UnityEngine.XR.Interaction.Toolkit.Interactables.InteractableSelectMode.Multiple;
+
+            // フォーカスモード：単一のInteractorのみフォーカス可能
+            // grabInteractable.focusMode = UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable.FocusMode.Single;
+
+            // オブジェクトの移動タイプ：Velocity Tracking（物理ベースで手に追従）
+            grabInteractable.movementType = UnityEngine.XR.Interaction.Toolkit.Interactables.XRBaseInteractable.MovementType.VelocityTracking;
+
+            // トランスフォームの親を保持しない
+            grabInteractable.retainTransformParent = false;
+
+            // 位置をトラッキングする
+            grabInteractable.trackPosition = true;
+
+            // スムーズな位置補間は無効（瞬時に追従）
+            grabInteractable.smoothPosition = false;
+
+            // 速度の減衰（1 = 無効）
+            // grabInteractable.velocityDamping = 1f;
+
+            // 速度倍率（1 = 標準）
+            // grabInteractable.velocityScale = 1f;
+
+            // 回転をトラッキングする
+            grabInteractable.trackRotation = true;
+
+            // スムーズな回転補間は無効
+            grabInteractable.smoothRotation = false;
+
+            // 回転速度の減衰（1 = 無効）
+            // grabInteractable.angularVelocityDamping = 1f;
+
+            // 回転速度倍率（1 = 標準）
+            // grabInteractable.angularVelocityScale = 1f;
+
+            // スケールをトラッキングする
+            grabInteractable.trackScale = true;
+
+            // スムーズスケーリングを有効化
+            grabInteractable.smoothScale = true;
+
+            // スムーズスケーリングの強さ
+            grabInteractable.smoothScaleAmount = 8f;
+
+            // スケーリングの締め付け強度（小さいほど早く追従）
+            grabInteractable.tightenScale = 0.1f;
+
+            // 掴み解除時に物体を投げる
+            grabInteractable.throwOnDetach = true;
+
+            // 投げるときの速度補間時間（秒）
+            grabInteractable.throwSmoothingDuration = 0.25f;
+
+            // 投げ速度倍率
+            grabInteractable.throwVelocityScale = 1.5f;
+
+            // 投げ角速度倍率（1 = 標準）
+            // grabInteractable.throwAngularVelocityScale = 1f;
+
+            // 掴み解除時に強制的に重力を有効にしない
+            grabInteractable.forceGravityOnDetach = false;
+
+            // アタッチポイント（未設定）
+            // grabInteractable.attachTransform = null;
+            // grabInteractable.secondaryAttachTransform = null;
+
+            // 遠距離掴み時のアタッチモード（Interactorに従う）
+            // grabInteractable.interactorAttachMode = XRBaseInteractable.InteractorAttachMode.FarAttachToInteractor;
+
+            // ダイナミックアタッチ有効化（Interactor位置に基づいて毎回調整）
+            grabInteractable.useDynamicAttach = true;
+
+            // 位置と回転を一致させる
+            grabInteractable.matchAttachPosition = true;
+            grabInteractable.matchAttachRotation = true;
+
+            // コライダーボリュームにスナップ
+            grabInteractable.snapToColliderVolume = true;
+
+            // 毎回掴むたびにアタッチの初期化
+            grabInteractable.reinitializeDynamicAttachEverySingleGrab = true;
+
+            // アタッチ時のEase-In時間（秒）
+            grabInteractable.attachEaseInTime = 0.15f;
         }
     }
     // Update is called once per frame

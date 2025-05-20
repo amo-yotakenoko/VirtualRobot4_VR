@@ -15,7 +15,7 @@ public class HTTPServerController : MonoBehaviour
     private ConcurrentQueue<Response> responseQueue = new ConcurrentQueue<Response>();
 
 
-    public static int port = 8080;
+    public int port = 8080;
     void Start()
     {
         port = int.Parse(Settings.load("HTTPport", "8080"));
