@@ -221,7 +221,7 @@ public class generateRobot : MonoBehaviour
         foreach (GameObject part in parts)
         {
             Rigidbody rb = part.AddComponent<Rigidbody>();
-            if (rb != null) rb.isKinematic = true;
+            rb.isKinematic = true;
         }
         foreach (GameObject part in parts)
         {
