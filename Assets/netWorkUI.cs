@@ -104,10 +104,7 @@ public class netWorkUI : MonoBehaviour
 
     public void Disconnect()
     {
-        if (NetworkManager.Singleton.IsListening)
-        {
-            NetworkManager.Singleton.Shutdown();
-        }
+        NetworkManager.Singleton.Shutdown();
         SceneManager.LoadScene("menu");
     }
 }

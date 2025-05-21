@@ -9,7 +9,6 @@ TagManager:
   - Anchor
   - PlayerHand
   - Destroyer
-  - parts
   layers:
   - Default
   - TransparentFX
@@ -19,7 +18,7 @@ TagManager:
   - UI
   - Player
   - Mirror
-  - grabCollider
+  - 
   - 
   - 
   - 

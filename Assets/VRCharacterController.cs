@@ -25,7 +25,7 @@ public class VRCharacterController : MonoBehaviour
     void Update()
     {
         climbing();
-        if (!isClimbing) moving();
+        moving();
     }
     public float moveSpeed;
     void moving()
