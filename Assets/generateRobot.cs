@@ -11,7 +11,6 @@ using System.Text;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR.Interaction.Toolkit.Transformers;
 
-
 public class generateRobot : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -825,7 +824,6 @@ public class generateRobot : MonoBehaviour
     }
 
 
-
     public void SetXRGrabInteractable(List<GameObject> parts)
     {
         print("SetXRGrabInteractable1");
@@ -932,6 +930,9 @@ public class generateRobot : MonoBehaviour
             grabInteractable.attachEaseInTime = 0.15f;
         }
     }
+
+
+
     // Update is called once per frame
     void Update()
     {
