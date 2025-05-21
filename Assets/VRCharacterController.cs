@@ -93,10 +93,10 @@ public class VRCharacterController : MonoBehaviour
         if (isClimbing)
         {
             Transform handTransform = GetHandTransform(activeHand);
-            Vector3 currentHandPos = handTransform.position;
-            Vector3 delta = lastHandWorldPos - currentHandPos;
-            xrOrigin.transform.position += delta * 1.1f;
-            lastHandWorldPos = currentHandPos;
+
+            Vector3 delta = lastHandWorldPos - handTransform.position;
+            xrOrigin.transform.position += delta * 2f;
+            lastHandWorldPos = handTransform.position;
         }
     }
 
