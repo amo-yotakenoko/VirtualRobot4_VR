@@ -221,7 +221,7 @@ public class generateRobot : MonoBehaviour
         {
             Rigidbody rb = part.AddComponent<Rigidbody>();
             rb.isKinematic = true;
-            var networkRigidbody = part.AddComponent<Unity.Netcode.Components.NetworkRigidbody>();
+            // var networkRigidbody = part.AddComponent<Unity.Netcode.Components.NetworkRigidbody>();
         }
         foreach (GameObject part in parts)
         {
