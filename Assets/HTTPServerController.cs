@@ -18,6 +18,12 @@ public class HTTPServerController : MonoBehaviour
     public static int port = 8080;
     void Start()
     {
+        if (player.ownerPlayer.gameObject != this.gameObject)
+        {
+            this.enabled = false;
+            return;
+        }
+
         port = int.Parse(Settings.load("HTTPport", "8080"));
 
 

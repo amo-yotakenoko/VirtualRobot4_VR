@@ -55,7 +55,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
         NetworkManager networkManager = NetworkManager.Singleton;
         // transform.position = new Vector3(0, 0, this.OwnerClientId * 10);
-        gameObject.name += NetworkObject.IsLocalPlayer.ToString();
+        gameObject.name += NetworkObject.IsLocalPlayer ? "IsLocalPlayer" : "";
 
         if (NetworkObject.IsOwner)
         {
@@ -146,16 +146,20 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
 
         print("ハッシュ更新");
+        this.name = $"ハッシュ更新{newValue}";
         // if (this.IsServer)
         // {
 
         //     fileHash.Value = FNV1a(data64);
         //     datacomplete = true;
         // }
+
+
         string cacheFilePath = getcacheRobotFile();
         if (cacheFilePath != null)
         {
             print("キャッシュを発見" + cacheFilePath);
+            this.name = $"キャッシュから更新";
             data64 = FileToBase64(cacheFilePath);
             datacomplete = true;
             // Destroy(textMesh.gameObject);
@@ -167,10 +171,12 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         {
             if (NetworkObject.IsOwner)
             {
+                this.name = $"サーバーに送信";
                 StartCoroutine(sendToServer());
             }
             else
             {
+                this.name = $"サーバーに要求";
                 WantDataServerRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId);
             }
         }
