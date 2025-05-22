@@ -10,6 +10,44 @@ public class VRManager : MonoBehaviour
     public bool simulatorMode;
     public GameObject XRdeviceSimulator;
 
+    public GameObject VRBasePrefab;
+    public GameObject VRHeadPrefab;
+    public GameObject VRRightHandPrefab;
+    public GameObject VRLeftHandPrefab;
+
+    // 生成されたインスタンスを記録
+    public GameObject vrBaseInstance;
+    public GameObject vrHeadInstance;
+    public GameObject vrRightHandInstance;
+    public GameObject vrLeftHandInstance;
+
+    void InstantiateVRPrefab()
+    {
+        // すでに生成済みなら何もしない
+        if (vrBaseInstance != null || vrHeadInstance != null ||
+            vrRightHandInstance != null || vrLeftHandInstance != null)
+        {
+            Debug.Log("VRプレハブはすでに生成されています。");
+            return;
+        }
+
+        // プレハブのインスタンス化
+        vrBaseInstance = Instantiate(VRBasePrefab);
+        vrHeadInstance = Instantiate(VRHeadPrefab);
+        vrRightHandInstance = Instantiate(VRRightHandPrefab);
+        vrLeftHandInstance = Instantiate(VRLeftHandPrefab);
+
+        // XR Origin 情報取得
+        VRCharacterController vrCharacterController = XROrigin.GetComponent<VRCharacterController>();
+
+        // 各オブジェクトの親を設定
+        vrBaseInstance.transform.SetParent(vrCharacterController.xrOrigin.transform, false);
+        vrHeadInstance.transform.SetParent(vrCharacterController.HeadTransform, false);  // 頭も XR Origin に直接付ける
+        vrRightHandInstance.transform.SetParent(vrCharacterController.rightHandTransform, false);
+        vrLeftHandInstance.transform.SetParent(vrCharacterController.leftHandTransform, false);
+    }
+
+
     void Start()
     {
         // 10秒ごとにチェックするコルーチン開始
@@ -23,6 +61,23 @@ public class VRManager : MonoBehaviour
     void Update()
     {
         GetControllerInput(" ", " ");
+
+        if (vrBaseInstance && vrHeadInstance && vrRightHandInstance && vrLeftHandInstance)
+        {
+            VRCharacterController vrCharacterController = GetComponent<VRCharacterController>();
+
+            vrBaseInstance.transform.position = vrCharacterController.xrOrigin.transform.position;
+            vrBaseInstance.transform.rotation = vrCharacterController.xrOrigin.transform.rotation;
+
+            vrHeadInstance.transform.position = vrCharacterController.HeadTransform.position;
+            vrHeadInstance.transform.rotation = vrCharacterController.HeadTransform.rotation;
+
+            vrRightHandInstance.transform.position = vrCharacterController.rightHandTransform.position;
+            vrRightHandInstance.transform.rotation = vrCharacterController.rightHandTransform.rotation;
+
+            vrLeftHandInstance.transform.position = vrCharacterController.leftHandTransform.position;
+            vrLeftHandInstance.transform.rotation = vrCharacterController.leftHandTransform.rotation;
+        }
     }
 
     static bool isVRMode = false;
@@ -56,6 +111,7 @@ public class VRManager : MonoBehaviour
                 camera.enabled = !isVR;
             }
         }
+        if (isVR) InstantiateVRPrefab();
     }
 
 

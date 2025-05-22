@@ -7,6 +7,7 @@ public class VRCharacterController : MonoBehaviour
 {
     public Transform leftHandTransform;
     public Transform rightHandTransform;
+    public Transform HeadTransform;
     public GameObject xrOrigin;
 
     private XRNode activeHand = XRNode.LeftHand;
