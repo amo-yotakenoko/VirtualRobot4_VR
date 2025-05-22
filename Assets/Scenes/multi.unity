@@ -3164,6 +3164,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 416404901}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &931305959 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3058145024869486012, guid: 77ac6b10722bcca4a8baf70e44d89e78,
+    type: 3}
+  m_PrefabInstance: {fileID: 416404901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &940200889
 GameObject:
   m_ObjectHideFlags: 0
@@ -3394,7 +3400,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftHandTransform: {fileID: 139524065}
   rightHandTransform: {fileID: 928184999}
-  HeadTransform: {fileID: 1988022166}
+  HeadTransform: {fileID: 931305959}
   xrOrigin: {fileID: 654918295}
   moveSpeed: 5
 --- !u!1 &971626697 stripped
@@ -5248,12 +5254,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!4 &1988022166 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2484471941286911804, guid: 77ac6b10722bcca4a8baf70e44d89e78,
-    type: 3}
-  m_PrefabInstance: {fileID: 416404901}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2011688786
 GameObject:
   m_ObjectHideFlags: 0

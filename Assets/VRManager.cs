@@ -38,13 +38,13 @@ public class VRManager : MonoBehaviour
         vrLeftHandInstance = Instantiate(VRLeftHandPrefab);
 
         // XR Origin 情報取得
-        VRCharacterController vrCharacterController = XROrigin.GetComponent<VRCharacterController>();
+        // VRCharacterController vrCharacterController = XROrigin.GetComponent<VRCharacterController>();
 
-        // 各オブジェクトの親を設定
-        vrBaseInstance.transform.SetParent(vrCharacterController.xrOrigin.transform, false);
-        vrHeadInstance.transform.SetParent(vrCharacterController.HeadTransform, false);  // 頭も XR Origin に直接付ける
-        vrRightHandInstance.transform.SetParent(vrCharacterController.rightHandTransform, false);
-        vrLeftHandInstance.transform.SetParent(vrCharacterController.leftHandTransform, false);
+        // // 各オブジェクトの親を設定
+        // vrBaseInstance.transform.SetParent(vrCharacterController.xrOrigin.transform, false);
+        // vrHeadInstance.transform.SetParent(vrCharacterController.HeadTransform, false);  // 頭も XR Origin に直接付ける
+        // vrRightHandInstance.transform.SetParent(vrCharacterController.rightHandTransform, false);
+        // vrLeftHandInstance.transform.SetParent(vrCharacterController.leftHandTransform, false);
     }
 
 

@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6090803736880827857}
   - component: {fileID: 2938507715164547000}
   - component: {fileID: 6289289760231312714}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: VRBase
   m_TagString: Untagged
   m_Icon: {fileID: 0}
