@@ -15,7 +15,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         Response responseData = new Response();
         print("commandText: " + commandText);
         CommandData command = JsonUtility.FromJson<CommandData>(commandText);
-
+        responseData.id = command.id;
 
 
         if (command.type == "set")

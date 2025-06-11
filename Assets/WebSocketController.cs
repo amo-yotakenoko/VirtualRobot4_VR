@@ -65,7 +65,13 @@ public class WebSocketController : Unity.Netcode.NetworkBehaviour
                     var commandText = Server.commandQueue.Dequeue();
                     print($"CommandText: {commandText}");
                     if (robotController != null)
-                        commandParse(commandText);
+                    {
+
+                        Response responseData = robotController.commandExecute(commandText);
+
+                        string respoonse = JsonUtility.ToJson(responseData);
+                        Server.currentConnection.sendToClient(respoonse);
+                    }
                     // print($"Name: {command.name}, Property: {command.property}, Value: {command.value}");
                     // // robotController.setvalue(name, property, value);
                     // robotController.setvalue(command.name, command.property, command.value);
@@ -76,35 +82,35 @@ public class WebSocketController : Unity.Netcode.NetworkBehaviour
     }
 
 
-    //TODO robotcontollorに統合予定
-    private void commandParse(string commandText)
-    {
-        CommandData command = JsonUtility.FromJson<CommandData>(commandText);
+    // //TODO robotcontollorに統合予定
+    // private void commandParse(string commandText)
+    // {
+    //     CommandData command = JsonUtility.FromJson<CommandData>(commandText);
 
-        if (robotController != null)
-        {
+    //     if (robotController != null)
+    //     {
 
-            if (command.type == "set")
-            {
-                var parts = command.key.Split('.');
-                if (parts.Length == 2)
-                {
+    //         if (command.type == "set")
+    //         {
+    //             var parts = command.key.Split('.');
+    //             if (parts.Length == 2)
+    //             {
 
-                    string name = parts[0];
-                    string property = parts[1];
-                    // Debug.Log($"First: {first}, Second: {second}");
-                    float value = float.Parse(command.value); // value
-                    robotController.setvalue(name, property, value);
-                }
-            }
-            else if (command.type == "get")
-            {
-                string result = response(command.key);
-                string respoonse = JsonUtility.ToJson(new ResponseData(result, command.id));
-                Server.currentConnection.sendToClient(respoonse);
-            }
-        }
-    }
+    //                 string name = parts[0];
+    //                 string property = parts[1];
+    //                 // Debug.Log($"First: {first}, Second: {second}");
+    //                 float value = float.Parse(command.value); // value
+    //                 robotController.setvalue(name, property, value);
+    //             }
+    //         }
+    //         else if (command.type == "get")
+    //         {
+    //             string result = response(command.key);
+    //             string respoonse = JsonUtility.ToJson(new ResponseData(result, command.id));
+    //             Server.currentConnection.sendToClient(respoonse);
+    //         }
+    //     }
+    // }
 
     string response(string key)
     {
