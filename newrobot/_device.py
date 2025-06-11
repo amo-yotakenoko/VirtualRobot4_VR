@@ -28,8 +28,7 @@ class Servo:
             print(f"set: {self.name}.angle = {value}")
             sys.stdout.flush() 
             self._angle = value
-
-
+            
 class DistanceSenser:
     def __init__(self, name):
         pass
@@ -56,7 +55,10 @@ class Camera:
 class Orbitcamera:
     def __init__(self, name):
         self.name = name
-A = Distancesensor("A")
+1 = Distancesensor("1")
+L = Distancesensor("L")
+R = Distancesensor("R")
+C = Distancesensor("C")
 A = Motor("A")
 B = Motor("B")
 C = Servo("C")

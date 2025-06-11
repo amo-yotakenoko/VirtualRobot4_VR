@@ -393,9 +393,16 @@ public class generateRobot : MonoBehaviour
 
             if (isOwner && device != null && device.type == "orbitCamera")
             {
-                print("orbitcamera");
+
                 SetObjectParentToCollidingPart(obj, parts);
                 obj.AddComponent<orbitCameraInput>();
+            }
+
+            if (isOwner && device != null && device.type == "distanceSensor")
+            {
+                robotController.distanceSensor sensorDevice = device as robotController.distanceSensor;
+                SetObjectParentToCollidingPart(obj, parts);
+                sensorDevice.sensor = obj.AddComponent<DistanceSensor>();
             }
 
         }
