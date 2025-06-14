@@ -182,6 +182,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
     {
         public string name;
         public string type;
+        public Transform transform;
     }
     public class motor : Device
     {
