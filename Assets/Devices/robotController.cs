@@ -15,7 +15,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         Response responseData = new Response();
         print("commandText: " + commandText);
         CommandData command = JsonUtility.FromJson<CommandData>(commandText);
-
+        responseData.id = command.id;
 
 
         if (command.type == "set")
@@ -63,10 +63,13 @@ public class robotController : Unity.Netcode.NetworkBehaviour
                 print(parts[1]);
                 return $"{Input.GetKey(parts[1])}";
             }
-
-            if (parts[0] == "VRright" || parts[0] == "VRleft")
+            else if (parts[0] == "VRright" || parts[0] == "VRleft")
             {
                 return VRManager.GetControllerInput(parts[0], parts[1]);
+            }
+            else
+            {
+                return getvalue(parts[0], parts[1]) ?? "";
             }
 
 
@@ -104,6 +107,28 @@ public class robotController : Unity.Netcode.NetworkBehaviour
             }
 
         }
+    }
+
+
+    public string getvalue(string name, string property)
+    {
+        foreach (var device in deviceList)
+        {
+
+            if (device.name == name)
+            {
+                // Device 型の power プロパティにアクセス
+                PropertyInfo powerProperty = device.GetType().GetProperty(property);
+                print(powerProperty);
+                if (powerProperty != null)
+                {
+                    return powerProperty.GetValue(device).ToString();
+
+                }
+            }
+
+        }
+        return null;
     }
 
 
@@ -157,6 +182,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
     {
         public string name;
         public string type;
+        public Transform transform;
     }
     public class motor : Device
     {
@@ -217,6 +243,23 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         }
 
     }
+
+
+    public class distanceSensor : Device
+    {
+
+        public DistanceSensor sensor;
+
+        public float distance
+        {
+            get { return sensor.getDistance(); }
+            set
+            {
+            }
+        }
+
+    }
+
 
 
     public class light : Device
