@@ -21,7 +21,15 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         if (command.type == "set")
         {
             var parts = command.key.Split('.');
-            if (parts.Length == 2)
+            print($"{parts.Length},{parts[0]}");
+            if (parts.Length == 1 && parts[0] == "activeViewproperty")
+            {
+                float value = float.Parse(command.value);
+                print($"activeViewproperty{value}");
+                viewProperty.enable = value == 1;
+                responseData.value = viewProperty.enable.ToString();
+            }
+            else if (parts.Length == 2)
             {
 
                 string name = parts[0];
@@ -85,15 +93,19 @@ public class robotController : Unity.Netcode.NetworkBehaviour
     }
     public void setvalue(string name, string property, float value)
     {
+
+
+
         setvalueServerRPC(name, property, value);
     }
 
     [ServerRpc]
     void setvalueServerRPC(string name, string property, float value)
     {
+        print(deviceList.Count + "個のデバイス");
         foreach (var device in deviceList)
         {
-
+            print(device.name + "の" + property + "を" + value + "に");
             if (device.name == name)
             {
                 // Device 型の power プロパティにアクセス
@@ -183,6 +195,10 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         public string name;
         public string type;
         public Transform transform;
+        public virtual string toString()
+        {
+            return $"{name} ({type})";
+        }
     }
     public class motor : Device
     {
@@ -257,6 +273,10 @@ public class robotController : Unity.Netcode.NetworkBehaviour
             {
             }
         }
+        public override string toString()
+        {
+            return base.toString() + $" ({distance}m)";
+        }
 
     }
 
@@ -281,7 +301,10 @@ public class robotController : Unity.Netcode.NetworkBehaviour
     }
     public class camera : Device
     {
-
+        public override string toString()
+        {
+            return "";
+        }
 
     }
 
@@ -289,3 +312,30 @@ public class robotController : Unity.Netcode.NetworkBehaviour
 }
 
 
+/*
+
+現在、アプリ開発を勉強しているのですが、アプリのアイディアを考えたり思いついたりする上で心掛けている事や何か重要だと思うことがあればアドバイスをいただきたいです！
+
+質問ありがとうございます!
+
+アプリ開発だと私は他であまり見ないタイプのものが多いので参考になるかわからないですが私が作ったアプリのアイデアと動機をざっと書いてみると
+①編模様(イラスト手編み支援)→一応編み物用だが動機の半分はminecraftのドット絵を作るため
+②pompompattern(ぽんぽん手芸支援)→母が読んでた手芸本の設計図がどうやって作られているかの検証
+③VirtualRobot(Unity上にあるロボットをscratchから動かす)→コロナ禍でロボットを触っていたサークルがオンラインになった、学校のアイデア公募に出してVR機器が欲しかった(買ってもらえた)
+④ColorSuggester(色の組み合わせを提案する)→配色デザインの本をいちいち開くのがめんどくさい、本で読んだ色彩調和論を試したい
+⑤ペーパークラフト設計図作成プログラム(未公開)→趣味で触っていたペーパークラフト設計ソフトが使いにくい
+など
+・身近にあるちょっと不便なことを自動化して便利にしたい④⑤
+・思いついたアルゴリズムを技術的に自分で作ることができるかのチャレンジ①②④⑤
+・他にもSNS(twitter,zenn,quita等)で見たライブラリなどを使ってみたいというところから②(画像検出の巻き数カウンタ機能)③(マルチプレイ機能)
+などから作り始めています。
+個人的にはアプリのアイデアの元になるものは本人やそれに近い人の趣味、興味等から持ってきた方がモチベーションなど何かと開発はしやすいと思うのですが皆さんそれでTODOアプリを作りがちみたいな部分はあるのでなかなか難しいところではありますね...(私も毎回完成した後はこれ以上のアイデアは一生出ないだろうと思いながら公開しています)
+また質問者さんの環境がどうかわかりませんが自分は授業中の余った時間、通学時間が長いので電車の中など何もすることがない中でアイデアが固まることが多かったと思うのですることが何もない時間も重要だったかもしれないです。
+
+質問から多少話は逸れますが良いアイデアがあってもそのアプリに必要な機能の絞り込み、紹介、アピール等勿体ないなと思う人をよく見るのでちょっと宣伝っぽくはなってしまいますが未踏ジュニアのメンター陣がそれぞれどんな風に紹介したら伝わりやすいかみたいなブログを書いていたりするのでコンテスト等出すつもりがなくても一度読んでほしいです。
+https://note.com/yoshifumiseki/n/n1e928281d7dc
+https://note.com/teramotodaiki/n/n148d35899016
+https://zenn.dev/reputeless/articles/idea-mitoujr
+
+それなりに長文になってしまったのですが他人のアイデア、アプリなど見せてもらうの好きなので自慢のアプリができたら是非見せてください!
+*/

@@ -299,6 +299,9 @@ public class generateRobot : MonoBehaviour
         {
             // print(robotController + "," + obj.name);
             robotController.Device device = robotController.addDevice(obj.name);
+            print("device:" + device + "," + obj.name);
+            if (device != null) device.transform = obj.transform;
+
             if (device != null) print("type:" + obj.name);
             // if (device != null) print("type::" + device.type);
             if (isServer && device != null && new string[] { "motor", "servo", "hinge" }.Contains(device.type))
@@ -404,6 +407,8 @@ public class generateRobot : MonoBehaviour
                 SetObjectParentToCollidingPart(obj, parts);
                 sensorDevice.sensor = obj.AddComponent<DistanceSensor>();
             }
+
+
 
         }
 

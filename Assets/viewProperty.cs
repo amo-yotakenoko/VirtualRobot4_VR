@@ -10,7 +10,7 @@ public class viewProperty : MonoBehaviour
     {
 
     }
-    public bool enable;
+    public static bool enable;
     private bool previousEnableState = false;
     void Update()
     {
@@ -45,11 +45,12 @@ public class viewProperty : MonoBehaviour
 
             // 表示用TMPを複製
             var go = Instantiate(TMPObject, device.transform.position, Quaternion.identity);
-            go.transform.SetParent(device.transform);               // デバイスに追従
+            // go.transform.SetParent(device.transform);               // デバイスに追従
 
-            var tmp = go.GetComponent<TMPro.TextMeshPro>();
-            if (tmp) tmp.text = $"{device.type}\n{device.name}";
-            print($"{device.type}\n{device.name}");
+            propertyObj propertyObj = go.GetComponent<propertyObj>();
+            propertyObj.device = device; // デバイス情報を設定
+
+
 
             _spawned.Add(go);
         }
@@ -65,9 +66,11 @@ public class viewProperty : MonoBehaviour
     public List<robotController.Device> GetAllPlayerDevices()
     {
         var robots = Object.FindObjectsOfType<robotController>(true);
-        return robots
+        var results = robots
           .Where(r => r != null && r.deviceList != null)
           .SelectMany(r => r.deviceList)
           .ToList();
+        print(results.Count + " devices found.");
+        return results;
     }
 }
