@@ -187,8 +187,12 @@ public class processController : Unity.Netcode.NetworkBehaviour
     }
     void OnDestroy()
     {
-        print("processclose");
-        proc.Kill();
+        if (proc != null)
+        {
+
+            print("processclose");
+            proc.Kill();
+        }
     }
 
 }
