@@ -304,7 +304,7 @@ public class generateRobot : MonoBehaviour
 
             if (device != null) print("type:" + obj.name);
             // if (device != null) print("type::" + device.type);
-            if (isServer && device != null && new string[] { "motor", "servo", "hinge" }.Contains(device.type))
+            if ((isServer || isOwner) && device != null && new string[] { "motor", "servo", "hinge" }.Contains(device.type))
             {
                 GameObject morterBase = obj.transform.Find("morterBase").gameObject;
                 GameObject morterBasePart = null;
@@ -320,6 +320,12 @@ public class generateRobot : MonoBehaviour
                 if (morterBasePart == morterAxisPart)
                 {
                     print("hingeが一緒");
+                    continue;
+                }
+
+                if (!isServer)
+                {
+                    SetObjectParentToCollidingPart(obj, parts);
                     continue;
                 }
                 // print(morterBase + "," + morterAxis);
@@ -371,7 +377,7 @@ public class generateRobot : MonoBehaviour
 
 
             Camera cameraComponent = obj.GetComponent<Camera>();
-            if (isOwner && cameraComponent != null && !cameraComponent.enabled)
+            if ((isServer || isOwner) && cameraComponent != null && !cameraComponent.enabled)
             {
                 cameraComponent.enabled = true;
                 SetObjectParentToCollidingPart(obj, parts);
