@@ -18,6 +18,7 @@ using Unity.Netcode;
 using Unity.Mathematics;
 using UnityEngine.SceneManagement;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Unity.Netcode.Components;
 
 public class sendRobot : Unity.Netcode.NetworkBehaviour
 {
@@ -146,42 +147,48 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
 
         print("ハッシュ更新");
-        this.name = $"ハッシュ更新{newValue}";
-        // if (this.IsServer)
-        // {
+        this.name += $"ハッシュ更新{newValue}";
 
-        //     fileHash.Value = FNV1a(data64);
-        //     datacomplete = true;
-        // }
-
-
-        string cacheFilePath = getcacheRobotFile();
-        if (cacheFilePath != null)
+        bool cacheEnable = true;
+        if (cacheEnable)
         {
-            print("キャッシュを発見" + cacheFilePath);
-            this.name = $"キャッシュから更新";
-            data64 = FileToBase64(cacheFilePath);
-            datacomplete = true;
-            // Destroy(textMesh.gameObject);
-            StartCoroutine(generate());
-            return;
+
+            string cacheFilePath = getcacheRobotFile(newValue.ToString());
+            if (cacheFilePath != null)
+            {
+                print("キャッシュを発見" + cacheFilePath);
+                this.name = $"キャッシュから生成";
+                data64 = FileToBase64(cacheFilePath);
+                datacomplete = true;
+                // Destroy(textMesh.gameObject);
+                StartCoroutine(generate());
+                return;
+            }
         }
+
 
         if (this.IsClient && !this.IsServer)
         {
-            if (NetworkObject.IsOwner)
-            {
-                this.name = $"サーバーに送信";
-                StartCoroutine(sendToServer());
-            }
-            else
-            {
-                this.name = $"サーバーに要求";
-                WantDataServerRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId);
-            }
+            this.name = $"サーバーに要求";
+            WantDataServerRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId);
         }
+        else if (this.IsServer)
+        {
+            this.name = $"クライアントに要求";
+
+            WantDataClientRpc(NetworkManager.Singleton.LocalClientId, this.OwnerClientId, rpcParams: RpcTarget.Single(this.OwnerClientId, RpcTargetUse.Temp));
+        }
+
+
     }
 
+
+    [Rpc(SendTo.SpecifiedInParams)]
+    private void WantDataClientRpc(ulong ClientId, ulong robotId, RpcParams rpcParams = default)
+    {
+        StartCoroutine(sendToServer());
+        this.name += "データおくる";
+    }
 
     public int sendTextSize;
     private IEnumerator sendToServer()
@@ -357,7 +364,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
     }
 
-    string getcacheRobotFile()
+    string getcacheRobotFile(string hash)
     {
         string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), ".robotCache");
 
@@ -368,7 +375,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         }
 
 
-        string fileName = $"robot_{fileHash.Value}.glb";
+        string fileName = $"robot_{hash}.glb";
         string fullPath = Path.Combine(cacheFolderPath, fileName);
 
 
