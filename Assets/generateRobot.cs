@@ -407,12 +407,12 @@ public class generateRobot : MonoBehaviour
                 obj.AddComponent<orbitCameraInput>();
             }
 
-            // if (isOwner && device != null && device.type == "distanceSensor")
-            // {
-            //     robotController.distanceSensor sensorDevice = device as robotController.distanceSensor;
-            //     SetObjectParentToCollidingPart(obj, parts);
-            //     sensorDevice.sensor = obj.AddComponent<DistanceSensor>();
-            // }
+            if (isOwner && device != null && device.type == "distanceSensor")
+            {
+                robotController.distanceSensor sensorDevice = device as robotController.distanceSensor;
+                SetObjectParentToCollidingPart(obj, parts);
+                sensorDevice.sensor = obj.AddComponent<DistanceSensor>();
+            }
 
 
 
