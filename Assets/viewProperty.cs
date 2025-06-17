@@ -31,6 +31,11 @@ public class viewProperty : MonoBehaviour
         }
     }
 
+    public void enableChange()
+    {
+        enable = !enable;
+    }
+
 
     /* ─────────────── ② TMP 生成/削除ロジック ─────────────── */
 
