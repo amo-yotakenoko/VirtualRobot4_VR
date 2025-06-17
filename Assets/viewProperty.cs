@@ -73,6 +73,7 @@ public class viewProperty : MonoBehaviour
         var robots = Object.FindObjectsOfType<robotController>(true);
         var results = robots
           .Where(r => r != null && r.deviceList != null)
+          .Where(x => x.IsOwner)
           .SelectMany(r => r.deviceList)
           .ToList();
         print(results.Count + " devices found.");
