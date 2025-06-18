@@ -95,6 +95,7 @@ public class robotPreview : MonoBehaviour
     public void Update()
     {
         gltfLoaded.transform.Rotate(0, Time.deltaTime * 5, 0);
+        if (robotSelect == null) Destroy(this.gameObject);
         // print(toggle.transform.parent.GetComponent<RectTransform>().sizeDelta);
         // toggle.GetComponent<RectTransform>().sizeDelta = new Vector2(1, 1) * toggle.transform.parent.GetComponent<RectTransform>().sizeDelta.y;
     }

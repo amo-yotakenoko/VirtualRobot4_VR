@@ -100,6 +100,7 @@ public class robotSelect : MonoBehaviour
         rp.toggle.onValueChanged.Invoke(true);
         robotpreview.transform.position = new Vector3(robotpos, 0, 0);
         robotpos += 10;
+        SceneManager.MoveGameObjectToScene(robotpreview, gameObject.scene);
 
 
 

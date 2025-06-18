@@ -57,6 +57,15 @@ public class netWorkUI : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             pause = !pause;
+            // if (pause)
+            // {
+            //     SceneManager.LoadScene("menu", LoadSceneMode.Additive);
+
+            // }
+            // else
+            // {
+            //     SceneManager.UnloadSceneAsync("menu");
+            // }
         }
         if (NetworkManager.Singleton.IsClient && !NetworkManager.Singleton.IsConnectedClient)
         {

@@ -45,8 +45,8 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         if (NetworkManager.Singleton.IsServer)
         {
             // robotname.Value = $"{Guid.NewGuid()}";
-            if (this.tag == "Player") robotname.Value = $"player_{OwnerClientId}_{Guid.NewGuid()}";
-            else robotname.Value = $"{Guid.NewGuid()}";
+            if (this.tag == "Player") robotname.Value = $"player_{OwnerClientId}_{Guid.NewGuid().ToString("N").Substring(0, 8)}";
+            else robotname.Value = $"{Guid.NewGuid().ToString("N").Substring(0, 8)}";
         }
         // {
         //     var robot = NetworkManager.Singleton.SceneManager.LoadScene("robot", LoadSceneMode.Additive);
@@ -412,23 +412,33 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         else
         {
             // while (!SendToClientComplete) yield return null;
-            yield return new WaitForSeconds(5f);
+            // yield return new WaitForSeconds(5f);
             yield return generateRobot.generate(bytes, isServer: this.IsServer, isOwner: this.IsOwner, name = $"{robotname.Value}");
 
             var localNetworkObject = GetComponent<NetworkObject>(); // ローカルのNetworkObjectを取得
+
             foreach (GameObject p in generateRobot.parts)
             {
-                GameObject networkParts = FindObjectsOfType<PartSync>().Where(x => p.name == x.partname.Value).Select(x => x.gameObject).FirstOrDefault();
-                if (networkParts != null)
+                GameObject target = null;
+
+                // 該当の親が見つかるまで繰り返し探す
+                while (target == null)
                 {
-
-                    p.transform.SetParent(networkParts.transform, worldPositionStays: true);
-                    p.transform.localPosition = Vector3.zero;
-                    p.transform.localRotation = Quaternion.identity;
-
-                    networkParts.GetComponent<MeshRenderer>().enabled = false;
-                    p.GetComponent<MeshRenderer>().enabled = false;
+                    target = FindObjectsOfType<PartSync>()
+                        .FirstOrDefault(x => x.partname.Value == p.name)?.gameObject;
+                    // print($"{p.name}のネットワークオブジェクトを探し中");
+                    yield return null;
                 }
+
+                // 親付けと調整
+                p.transform.SetParent(target.transform, worldPositionStays: true);
+                p.transform.localPosition = Vector3.zero;
+                p.transform.localRotation = Quaternion.identity;
+
+                // メッシュ表示オフ（必要なら）
+                p.GetComponent<MeshRenderer>().enabled = false;
+                target.GetComponent<MeshRenderer>().enabled = false;
+                yield return new WaitForSeconds(0.1f);
             }
             // yield return new WaitForSeconds(5f);
             // int i = 0;
