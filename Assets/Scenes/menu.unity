@@ -280,8 +280,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1383108664}
-        m_TargetAssemblyTypeName: robotSelect, Assembly-CSharp
+      - m_Target: {fileID: 1383108667}
+        m_TargetAssemblyTypeName: NetCodeConnection, Assembly-CSharp
         m_MethodName: CreateRelay
         m_Mode: 1
         m_Arguments:
@@ -1398,8 +1398,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1383108664}
-        m_TargetAssemblyTypeName: robotSelect, Assembly-CSharp
+      - m_Target: {fileID: 1383108667}
+        m_TargetAssemblyTypeName: NetCodeConnection, Assembly-CSharp
         m_MethodName: StartClient
         m_Mode: 1
         m_Arguments:
@@ -1665,8 +1665,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1383108664}
-        m_TargetAssemblyTypeName: robotSelect, Assembly-CSharp
+      - m_Target: {fileID: 1383108667}
+        m_TargetAssemblyTypeName: NetCodeConnection, Assembly-CSharp
         m_MethodName: StartHost
         m_Mode: 1
         m_Arguments:
@@ -1863,6 +1863,7 @@ GameObject:
   - component: {fileID: 1383108665}
   - component: {fileID: 1383108664}
   - component: {fileID: 1383108666}
+  - component: {fileID: 1383108667}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1890,11 +1891,6 @@ MonoBehaviour:
   programPath: 
   image: {fileID: 1597184860}
   scrollViewContent: {fileID: 2103575005}
-  IpPortInput: {fileID: 781802615}
-  lobbyName: aaa
-  maxPlayers: 10
-  maxConnections: 10
-  hostAllocationId: 
 --- !u!4 &1383108665
 Transform:
   m_ObjectHideFlags: 0
@@ -1923,6 +1919,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 0
+--- !u!114 &1383108667
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1383108663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3990b742d1b9a79478f6b90361ba0302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IpPortInput: {fileID: 781802615}
+  lobbyName: 
+  maxPlayers: 128
+  maxConnections: 128
 --- !u!1 &1597184858
 GameObject:
   m_ObjectHideFlags: 0
@@ -3076,7 +3088,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.00006373067, y: 212.99997}
+  m_AnchoredPosition: {x: 0.00006373067, y: 212.99992}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &2103575007
