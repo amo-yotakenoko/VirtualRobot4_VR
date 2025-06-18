@@ -44,6 +44,8 @@ public class makeCollider : MonoBehaviour
 
     public IEnumerator generate(List<GameObject> generateobjs)
     {
+
+
         objs = generateobjs;
         // print("1");
         // byte[] robotbyte = File.ReadAllBytes(filePath);
@@ -80,7 +82,7 @@ public class makeCollider : MonoBehaviour
             obj.GetComponent<MeshRenderer>().enabled = false;
             hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
 
-
+            // yield return null;
             // yield return AddSplitNotConvoxCollider(obj);
             // var r = obj.AddComponent<Rigidbody>();
             // yield return null;
@@ -102,7 +104,7 @@ public class makeCollider : MonoBehaviour
 
 
     }
-    List<Material> transparentMaterials = new List<Material>();
+    public static List<Material> transparentMaterials = new List<Material>();
     void progressMeshDraw()
     {
         // UnityEngine.Random.InitState(0);
@@ -158,6 +160,7 @@ public class makeCollider : MonoBehaviour
     // public List<Triangle> triangles = new List<Triangle>();
     IEnumerator AddSplitNotConvoxCollider(GameObject obj)
     {
+        // float lastYieldTime = Time.realtimeSinceStartup;
 
         List<Triangle> triangles = new List<Triangle>();
         MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
@@ -186,19 +189,26 @@ public class makeCollider : MonoBehaviour
             }
 
 
-            yield return null;
+            // yield return null;
             // List<int> triangleIndices = new List<int>();//newmesh用
             // List<Vector3> triangleVertices = new List<Vector3>();
             List<Triangle> meshTrangles = new List<Triangle>();
             Mesh splitMesh = new Mesh();
             int count = 0;
+
             while (true)
             {
+
                 bool end = true;
                 for (int i = 0; i < mesh.triangles.Length; i += 3)
                 {
-                    if (count++ % 100 == 0)
-                        yield return null;
+                    // if (Time.realtimeSinceStartup - lastYieldTime > 0.1f)
+                    // {
+                    //     // yield return null; // 次フレームに処理を回す
+                    //     lastYieldTime = Time.realtimeSinceStartup;
+                    // }
+                    // if (count++ % 200 == 0)
+                    //     yield return null;
                     if (allAddedTriangleIds.Contains(i)) continue;
 
                     // print(addedVertices.Count);
@@ -302,6 +312,7 @@ public class makeCollider : MonoBehaviour
 
     IEnumerator AddNotConvoxCollider(GameObject obj, Mesh mesh, List<Triangle> triangles)
     {
+        float lastYieldTime = Time.realtimeSinceStartup;
         // print("AddNotConvoxCollider");
         var collider = obj.AddComponent<MeshCollider>();
         colliders.Add(collider);
@@ -335,11 +346,21 @@ public class makeCollider : MonoBehaviour
         while (triangles.Count > 0)
         {
             count++;
-            if (count > 100) break;
+            if (count > 1024) break;
             yield return null;
             bool end = true;
             for (int i = 0; i < triangles.Count; i++)
             {
+                // if (count++ % 200 == 0)
+                //     yield return null;
+                // yield return null;
+                // if (Time.realtimeSinceStartup - lastYieldTime > 0.005f)
+                // {
+                //     print("AddNotConvoxCollider");
+                //     yield return null; // 次フレームに処理を回す
+                //     lastYieldTime = Time.realtimeSinceStartup;
+                // }
+
                 // yield return null;
                 Triangle triangle = triangles[i];
                 Mesh triangleMesh = new Mesh();
@@ -392,7 +413,7 @@ public class makeCollider : MonoBehaviour
                     i--;
                     // print(triangles.Count);
                     end = false;
-                    yield return null;
+                    // yield return null;
                 }
                 // yield return new WaitForSeconds(1f);
             }
@@ -400,7 +421,7 @@ public class makeCollider : MonoBehaviour
             {
                 // yield return new WaitForSeconds(2f);
                 // Destroy(collider);
-                yield return null;
+                // yield return null;
                 triangleIndices.Clear();
                 triangleVertices.Clear();
                 colliders.Add(collider);
@@ -422,7 +443,7 @@ public class makeCollider : MonoBehaviour
             Vector3 v1 = obj.transform.TransformPoint(vertices[triangles[i + 1]]);
             Vector3 v2 = obj.transform.TransformPoint(vertices[triangles[i + 2]]);
             Vector3 c = (v0 + v1 + v2) / 3f;
-            List<Vector3> centers = new List<Vector3>
+            Vector3[] centers = new Vector3[]
         {
             c,
             (c+v0)/2.0f,
@@ -436,6 +457,7 @@ public class makeCollider : MonoBehaviour
             // (v0 * 0.1f + v1 * 0.8f + v2 * 0.1f) / 3f,
             // (v0 * 0.1f + v1 * 0.1f + v2 * 0.8f) / 3f
         };
+
             foreach (var center in centers)
             {
 

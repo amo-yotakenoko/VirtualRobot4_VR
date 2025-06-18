@@ -19,6 +19,7 @@ public class PartSync : NetworkBehaviour
     {
         if (NetworkManager.Singleton.IsServer)
         {
+            GetComponent<MeshRenderer>().enabled = false;
             // サーバー側で直接変更
             partname.Value = this.name;
         }
