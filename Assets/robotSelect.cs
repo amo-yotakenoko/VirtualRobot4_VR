@@ -30,7 +30,7 @@ public class robotSelect : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        image.enabled = false;
+        if (image != null) image.enabled = false;
         string currentDirectory = Directory.GetCurrentDirectory();
 
         // // #if UNITY_EDITOR
@@ -121,8 +121,12 @@ public class robotSelect : MonoBehaviour
     public void selectRobot(string path, RenderTexture renderTexture)
     {
         print(path);
-        image.enabled = true;
-        image.texture = renderTexture;
+        if (image != null)
+        {
+
+            image.enabled = true;
+            image.texture = renderTexture;
+        }
         var files = Directory.GetFiles(path)
                              .OrderByDescending(f => new FileInfo(f).LastWriteTime)
                              // .Select(f => Path.GetFileName(f))
@@ -149,7 +153,7 @@ public class robotSelect : MonoBehaviour
             }
         }
 
-        propertyView.text = $"{path}\nmodel:{glbPath}\nsoft:{programPath}\nprogram:{processPath}";
+        if (propertyView != null) propertyView.text = $"{path}\nmodel:{glbPath}\nsoft:{programPath}\nprogram:{processPath}";
 
 
     }
