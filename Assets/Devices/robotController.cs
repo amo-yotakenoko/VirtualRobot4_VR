@@ -8,7 +8,11 @@ using System;
 using Unity.Netcode;
 public class robotController : Unity.Netcode.NetworkBehaviour
 {
-
+    [System.Serializable]
+    public class DeviceListWrapper
+    {
+        public List<robotController.Device> devices;
+    }
 
     public Response commandExecute(string commandText)
     {
@@ -75,12 +79,26 @@ public class robotController : Unity.Netcode.NetworkBehaviour
             {
                 return VRManager.GetControllerInput(parts[0], parts[1]);
             }
+
             else
             {
                 return getvalue(parts[0], parts[1]) ?? "";
             }
 
 
+        }
+        else
+        {
+            if (parts[0] == "info")
+            {
+                var wrapper = new DeviceListWrapper { devices = viewProperty.GetAllPlayerDevices() };
+
+
+                string result = JsonUtility.ToJson(wrapper, true);
+                print("プロパティ情報" + result);
+                // result = "プロパティ情報";
+                return result;
+            }
         }
         return "";
     }

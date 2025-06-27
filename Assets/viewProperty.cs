@@ -68,13 +68,15 @@ public class viewProperty : MonoBehaviour
         _spawned.Clear();
     }
 
-    public List<robotController.Device> GetAllPlayerDevices()
+    public static List<robotController.Device> GetAllPlayerDevices()
     {
         var robots = Object.FindObjectsOfType<robotController>(true);
         var results = robots
           .Where(r => r != null && r.deviceList != null)
           .Where(x => x.IsOwner)
           .SelectMany(r => r.deviceList)
+          .GroupBy(d => new { d.name, d.type })
+          .Select(g => g.First())
           .ToList();
         print(results.Count + " devices found.");
         return results;
