@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.XR;
 
 public class VRManager : MonoBehaviour
@@ -82,6 +83,7 @@ public class VRManager : MonoBehaviour
 
     static bool isVRMode = false;
 
+
     IEnumerator CheckHandTracking()
     {
 
@@ -101,6 +103,8 @@ public class VRManager : MonoBehaviour
 
     void activeCameraSet(bool isVR)
     {
+
+        print("VR有効?" + isVR);
         XROrigin.SetActive(isVR);
         cameraUI ui = FindObjectOfType<cameraUI>();
         if (ui != null)
@@ -112,6 +116,12 @@ public class VRManager : MonoBehaviour
             }
         }
         if (isVR) InstantiateVRPrefab();
+        foreach (var interactor in FindObjectsOfType<UnityEngine.XR.Interaction.Toolkit.UI.XRUIInputModule>(true))
+        {
+            interactor.enabled = isVR;
+        }
+
+
     }
 
 
