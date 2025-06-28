@@ -31,6 +31,7 @@ public class robotPreview : MonoBehaviour
             Debug.LogError("No .glb file found in directory: " + path);
             yield break;
         }
+        this.gameObject.name = glbpath;
 
 
         byte[] data = File.ReadAllBytes(glbpath);
@@ -67,6 +68,7 @@ public class robotPreview : MonoBehaviour
 
         // レンダーテクスチャをRawImageに設定する
         image.texture = renderTexture;
+        image.gameObject.name = this.gameObject.name;
         gltfLoaded.transform.Rotate(-25, 0, 0);
         // GameObject robotContentUI = Instantiate(robotContentUIPrefab, scrollViewContent);
         // robotContentUI.transform.SetParent(robotContentUI.transform);

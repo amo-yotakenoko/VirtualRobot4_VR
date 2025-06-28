@@ -83,7 +83,7 @@ public class robotSelect : MonoBehaviour
     }
 
 
-    float robotpos = 0;
+    float robotpos = 100;
     public GameObject robotPreviewPrefab;
     void createRobotPreview(string path)
     {
@@ -98,7 +98,7 @@ public class robotSelect : MonoBehaviour
         rp.toggle.group = GetComponent<ToggleGroup>();
         rp.toggle.isOn = true;
         rp.toggle.onValueChanged.Invoke(true);
-        robotpreview.transform.position = new Vector3(robotpos, 0, 0);
+        robotpreview.transform.position = new Vector3(robotpos, -100, 0);
         robotpos += 10;
         SceneManager.MoveGameObjectToScene(robotpreview, gameObject.scene);
 
