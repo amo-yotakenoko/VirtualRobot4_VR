@@ -21,6 +21,8 @@ public class robotPreview : MonoBehaviour
     RenderTexture renderTexture;
     public IEnumerator generate(string path)
     {
+        cameraSet();
+
         directoryPath = path;
         string glbpath = Directory.GetFiles(path)
                                   .Where(file => Path.GetExtension(file) == ".glb")
@@ -57,6 +59,14 @@ public class robotPreview : MonoBehaviour
         gltfLoaded.localScale = new Vector3(1, 1, 1) * 5 / size;
 
 
+
+        objsProcess(this.transform);
+
+
+    }
+
+    void cameraSet()
+    {
         // UI要素にアタッチするRawImageを作成し、レンダーテクスチャを設定
         // rawImage = Instantiate(rawImagePrefab, transform);
         // rawImage.texture = renderTexture;
@@ -68,13 +78,17 @@ public class robotPreview : MonoBehaviour
 
         // レンダーテクスチャをRawImageに設定する
         image.texture = renderTexture;
+
+        RectTransform rect = image.rectTransform;
+        rect.anchorMin = new Vector2(0, 0);
+        rect.anchorMax = new Vector2(1, 1);
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
         image.gameObject.name = this.gameObject.name;
         gltfLoaded.transform.Rotate(-25, 0, 0);
         // GameObject robotContentUI = Instantiate(robotContentUIPrefab, scrollViewContent);
         // robotContentUI.transform.SetParent(robotContentUI.transform);
-        objsProcess(this.transform);
-
-
     }
 
     void objsProcess(Transform parent)

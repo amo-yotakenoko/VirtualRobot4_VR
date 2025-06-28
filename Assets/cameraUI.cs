@@ -48,7 +48,7 @@ public class cameraUI : MonoBehaviour
     public void registerCameras()
     {
 
-        allCameras = new List<Camera>(FindObjectsOfType<Camera>());
+        allCameras = new List<Camera>(FindObjectsOfType<Camera>().Where(c => c.gameObject.activeInHierarchy && c.gameObject.tag == "playerCamera"));
 
         // enable なカメラだけをフィルタリングする
         allCameras = allCameras.Where(c => c.enabled).ToList();

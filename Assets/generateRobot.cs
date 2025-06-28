@@ -380,6 +380,7 @@ public class generateRobot : MonoBehaviour
             if ((isServer || isOwner) && cameraComponent != null && !cameraComponent.enabled)
             {
                 cameraComponent.enabled = true;
+                cameraComponent.gameObject.tag = "playerCamera";
                 SetObjectParentToCollidingPart(obj, parts);
             }
 
@@ -404,6 +405,7 @@ public class generateRobot : MonoBehaviour
             {
 
                 SetObjectParentToCollidingPart(obj, parts);
+
                 obj.AddComponent<orbitCameraInput>();
             }
 

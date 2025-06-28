@@ -15,7 +15,12 @@ public class orbitCameraInput : MonoBehaviour
         y.SetParent(this.transform);
         y.localPosition = new Vector3(0, 0, 0);
         y.localRotation = Quaternion.identity;
-        c = new GameObject().transform.gameObject.AddComponent<Camera>();
+
+        var cameraObject = new GameObject();
+
+        cameraObject.tag = "playerCamera";
+
+        c = cameraObject.transform.gameObject.AddComponent<Camera>();
         c.transform.SetParent(y);
         distance = 15;
         c.transform.localPosition = new Vector3(0, 0, -distance);
