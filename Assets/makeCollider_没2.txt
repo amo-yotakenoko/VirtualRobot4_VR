@@ -1,0 +1,504 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using System.Linq;
+using System;
+using Unity.Mathematics;
+using UnityEditor;
+
+public class makeCollider : MonoBehaviour
+{
+    public class Triangle
+    {
+        public bool added = false;
+        public Vector3 v0;
+        public Vector3 v1;
+        public Vector3 v2;
+
+        public List<Triangle> neighbors = new List<Triangle>();
+
+        public Triangle(Vector3 ve0, Vector3 ve1, Vector3 ve2)
+        {
+            v0 = ve0;
+            v1 = ve1;
+            v2 = ve2;
+        }
+        public IEnumerable<(Vector3, Vector3)> GetEdges()
+        {
+            yield return GetOrderedEdge(v0, v1);
+            yield return GetOrderedEdge(v1, v2);
+            yield return GetOrderedEdge(v2, v0);
+        }
+
+        private (Vector3, Vector3) GetOrderedEdge(Vector3 a, Vector3 b)
+        {
+            return (a.x < b.x || (a.x == b.x && a.y < b.y) || (a.x == b.x && a.y == b.y && a.z < b.z)) ? (a, b) : (b, a);
+        }
+
+        //辺が凸かどうか調べる、没
+        public static bool IsConvex(Triangle triA, Triangle triB)
+        {
+            (Vector3, Vector3) sharedEdge;
+            // 1. 共通エッジ（2つの共通頂点）を探す
+            var sharedVertices = new HashSet<Vector3>(new[] { triA.v0, triA.v1, triA.v2 });
+            sharedVertices.IntersectWith(new[] { triB.v0, triB.v1, triB.v2 });
+
+            if (sharedVertices.Count != 2)
+            {
+                sharedEdge = default;
+                Debug.LogWarning("隣接していない三角形です");
+                return false; // 共通のエッジがない
+            }
+
+            var sharedArray = sharedVertices.ToArray();
+            sharedEdge = (sharedArray[0], sharedArray[1]);
+
+            // 2. 法線計算（ローカル空間）
+            Vector3 normalA = Vector3.Cross(triA.v1 - triA.v0, triA.v2 - triA.v0).normalized;
+            Vector3 normalB = Vector3.Cross(triB.v1 - triB.v0, triB.v2 - triB.v0).normalized;
+
+            // 3. 共通エッジの方向（片方向に統一）
+            Vector3 edgeDir = (sharedEdge.Item2 - sharedEdge.Item1).normalized;
+
+            // 4. cross(normalA, normalB) と edgeDir の内積
+            float dir = Vector3.Dot(Vector3.Cross(normalA, normalB), edgeDir);
+
+            // 5. 判定（※左手系/右手系や三角形の頂点順で符号が変わる）
+            return dir > 0f; // true = 凸, false = 凹
+        }
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        StartCoroutine(generate(FindObjectsOfType<MeshFilter>().Select(x => x.gameObject).ToList()));
+
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        progressMeshDraw();
+    }
+    public List<GameObject> objs = new List<GameObject>();
+    public List<MeshCollider> colliders = new List<MeshCollider>();
+
+
+
+
+    // public Material tmpmaterial;
+
+    public int runningCoroutineCount = 0;
+
+
+    public static List<Material> transparentMaterials = new List<Material>();
+    void progressMeshDraw()
+    {
+        // UnityEngine.Random.InitState(0);
+
+        // 0 から 1 の間の乱数を生成して色の RGB 成分に適用
+
+
+        // 生成した RGB 成分を使って新しい色を作成
+        // Color newColor = new Color(Random.value, Random.value, Random.value);
+        int i = 0;
+        foreach (MeshCollider collider in colliders)
+        {
+            Mesh mesh = collider.sharedMesh;
+            if (mesh != null)
+            {
+                Matrix4x4 matrix = transformToMatrix(collider.transform);
+                Color c = Color.HSVToRGB(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0.9f, 1f), UnityEngine.Random.Range(0.5f, 1f));
+                if (transparentMaterials.Count < i + 1) transparentMaterials.Add(CreateTransparentMaterial(c, 0.2f));
+
+
+                Graphics.DrawMesh(mesh, matrix, transparentMaterials[i], 0);
+                matrix = transformToMatrix(collider.transform, new Vector3(0, (i + 1) * 3, 0));
+                Graphics.DrawMesh(mesh, matrix, transparentMaterials[i], 0);
+
+
+            }
+            i += 1;
+        }
+    }
+    Matrix4x4 transformToMatrix(Transform transform, Vector3? offset = null)
+    {
+        Vector3 position = transform.position;
+        if (offset.HasValue)
+        {
+            position += offset.Value;
+        }
+
+        Vector3 scale = transform.lossyScale;
+        Vector3 rotation = transform.rotation.eulerAngles;
+
+        return Matrix4x4.TRS(position, Quaternion.Euler(rotation), scale);
+    }
+    public Material transparentMaterial;
+    public Material CreateTransparentMaterial(Color color, float alpha)
+    {
+        // print(transparentMaterial);
+        if (transparentMaterial == null) transparentMaterial = (Material)Resources.Load("transparentMaterial");
+        // 新しい Material を作成
+        // Material material = new Material(Shader.Find("Standard"));
+        // material.SetFloat("_Mode", 3); // Fade モード
+        // material.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
+        // material.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+        // material.SetInt("_ZWrite", 0);
+        // material.DisableKeyword("_ALPHATEST_ON");
+        // material.EnableKeyword("_ALPHABLEND_ON");
+        // material.DisableKeyword("_ALPHAPREMULTIPLY_ON");
+        // material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+        Material material = new Material(transparentMaterial);
+        color.a = alpha;
+        material.color = color;
+
+
+        return material;
+    }
+
+    // public List<Triangle> triangles = new List<Triangle>();
+    IEnumerator AddSplitNotConvoxCollider(GameObject obj)
+    {
+        // float lastYieldTime = Time.realtimeSinceStartup;
+        List<Triangle> triangles = GetTrianglesFromMeshCollider(obj);
+
+        var meshFilter = obj.GetComponent<MeshFilter>();
+        MeshCollider originMeshCollider = null;
+        if (meshFilter != null)
+        {
+            originMeshCollider = obj.AddComponent<MeshCollider>();
+            originMeshCollider.sharedMesh = meshFilter.sharedMesh;
+            originMeshCollider.convex = false; // 凹形状のまま使いたいなら false
+        }
+
+
+        var collider = obj.AddComponent<MeshCollider>();
+        colliders.Add(collider);
+
+        Mesh triangleMesh = new Mesh();
+
+        List<Vector3> tmpVertices = new List<Vector3>();
+        List<int> tmpTriangleIndices = new List<int>();
+        print(triangles.Count);
+
+
+        List<Triangle> addedTriangles = new List<Triangle>();
+
+
+
+        Triangle firstTriangle = triangles.Where(x => !x.added).OrderBy(_ => UnityEngine.Random.value).FirstOrDefault();
+
+        addedTriangles.Add(firstTriangle);
+        firstTriangle.added = true;
+        foreach (Triangle triangle in triangles.Where(x => !x.added))
+        {
+
+            // print("Dequeued triangle: " + triangle.v0 + ", " + triangle.v1 + ", " + triangle.v2);
+
+            Vector3 addVertex = new List<Vector3>() { triangle.v0, triangle.v1, triangle.v2 }.Where(x => !tmpVertices.Contains(x)).FirstOrDefault();
+
+            if (IsPointInsideMesh(originMeshCollider, addedTriangles.SelectMany(x => new List<Vector3>() { x.v0, x.v1, x.v2 }), addVertex))
+            {
+
+                triangle.added = true;
+                addedTriangles.Add(triangle);
+                print("メッシュを追加" +addedTriangles.Count);
+
+                tmpVertices.Add(triangle.v0);
+                tmpVertices.Add(triangle.v1);
+                tmpVertices.Add(triangle.v2);
+
+                int index = tmpVertices.Count - 3;
+                tmpTriangleIndices.Add(index);
+                tmpTriangleIndices.Add(index + 1);
+                tmpTriangleIndices.Add(index + 2);
+
+            }
+
+
+
+
+
+
+
+
+            Mesh mesh = new Mesh();
+            mesh.vertices = tmpVertices.ToArray();
+            mesh.triangles = tmpTriangleIndices.ToArray();
+            mesh.RecalculateNormals();
+            collider.sharedMesh = mesh;
+            collider.convex = true;
+
+
+            yield return null;
+            yield return new WaitForSeconds(0.2f);
+
+            // print("MeshCollider added to " + obj.name + " with " + triangles.Count + " triangles.");
+        }
+
+        print("終了");
+        Destroy(originMeshCollider);
+
+        yield return null;
+    }
+
+    // private bool isVertexInMesh(MeshCollider originMeshCollider, List<Triangle> addedTriangles, Vector3 addVertex)
+    // {
+
+    //     print("245" + addedTriangles.Count);
+    //     foreach (var addedVertex in addedTriangles.SelectMany(x => new List<Vector3>() { x.v0, x.v1, x.v2 }))
+    //     {
+
+    //         print("249");
+    //         // 追加する頂点と既存の頂点の中間点を計算
+    //         Vector3 midPoint = (addVertex + addedVertex) / 2;
+
+    //         // 中間点がメッシュ内にあるかどうかを確認
+    //         if (!IsPointInsideMesh(originMeshCollider, midPoint))
+    //         {
+
+    //             return false;
+
+    //         }
+    //     }
+
+    //     return true;
+    // }
+
+    IEnumerator GetChildObjects(Transform parent)
+    {
+        // 親オブジェクトの子の数だけループします
+        foreach (Transform child in parent)
+        {
+
+            if (child.name != "loadprogress")
+                objs.Add(child.gameObject);
+            // 子オブジェクトを処理します
+            // Debug.Log("Found child: " + child.name);
+
+
+
+            yield return null;
+            yield return GetChildObjects(child);
+        }
+    }
+    public IEnumerator generate(List<GameObject> generateobjs)
+    {
+
+
+        objs = generateobjs;
+        // print("1");
+        // byte[] robotbyte = File.ReadAllBytes(filePath);
+        // print("2");
+
+        // yield return GetChildObjects(this.transform);
+
+        // while (true) yield return null;
+
+        // foreach (GameObject obj in objs)
+        // {
+        //     MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+        //     if (meshFilter == null) continue;
+        //     var r = obj.AddComponent<Rigidbody>();
+        //     obj.AddComponent<MeshCollider>().convex = true;
+
+        // }
+
+        // List<Coroutine> coroutines = new List<Coroutine>();
+        // runningCoroutineCount = 0;
+        colliders = new List<MeshCollider>();
+        List<MeshRenderer> hidedmeshs = new List<MeshRenderer>();
+        foreach (GameObject obj in objs)
+        {
+
+
+
+            // yield return AddNotConvoxCollider(obj);
+            // yield return AddSplitNotConvoxCollider(obj);
+            MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+            if (meshFilter == null) continue;
+            runningCoroutineCount += 1;
+            StartCoroutine(AddSplitNotConvoxCollider(obj));
+            obj.GetComponent<MeshRenderer>().enabled = false;
+            hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
+
+            // yield return null;
+            // yield return AddSplitNotConvoxCollider(obj);
+            // var r = obj.AddComponent<Rigidbody>();
+            // yield return null;
+            // yield return null;
+            // yield return null;
+        }
+
+        while (runningCoroutineCount > 0)
+        {
+
+            yield return null;
+        }
+        // yield return new WaitForSeconds(1);
+        foreach (MeshRenderer hidedmesh in hidedmeshs)
+        {
+            hidedmesh.enabled = true;
+        }
+
+
+
+    }
+
+
+    public List<Triangle> GetTrianglesFromMeshCollider(GameObject obj)
+    {
+        List<Triangle> triangleList = new List<Triangle>();
+        print("GetTrianglesFromMeshCollider called for " + obj.name);
+        // MeshColliderを取得
+        MeshFilter collider = obj.GetComponent<MeshFilter>();
+        if (collider == null || collider.sharedMesh == null)
+        {
+            Debug.LogWarning("MeshCollider または Mesh が見つかりません");
+            return triangleList;
+        }
+
+        Mesh mesh = collider.sharedMesh;
+
+        Vector3[] vertices = mesh.vertices;
+        int[] indices = mesh.triangles;
+
+        print(indices.Length);
+
+        // 3つずつインデックスを取り出して Triangle を作成
+        for (int i = 0; i < indices.Length; i += 3)
+        {
+            // print("Triangle: " + i / 3 + " - " + indices[i] + ", " + indices[i + 1] + ", " + indices[i + 2]);
+            Vector3 v0 = obj.transform.TransformPoint(vertices[indices[i]]);
+            Vector3 v1 = obj.transform.TransformPoint(vertices[indices[i + 1]]);
+            Vector3 v2 = obj.transform.TransformPoint(vertices[indices[i + 2]]);
+
+            Triangle tri = new Triangle(v0, v1, v2);
+            triangleList.Add(tri);
+        }
+
+        BuildTriangleNeighbors(triangleList);
+
+        return triangleList;
+    }
+
+
+    public void BuildTriangleNeighbors(List<Triangle> triangles)
+    {
+        // エッジから三角形リストを引ける辞書
+        Dictionary<(Vector3, Vector3), List<Triangle>> edgeMap = new Dictionary<(Vector3, Vector3), List<Triangle>>();
+
+        // 各三角形の各エッジを登録
+        foreach (var tri in triangles)
+        {
+            foreach (var edge in tri.GetEdges())
+            {
+                if (!edgeMap.TryGetValue(edge, out var list))
+                {
+                    list = new List<Triangle>();
+                    edgeMap[edge] = list;
+                }
+                list.Add(tri);
+            }
+        }
+
+        // 隣接関係を登録（同じエッジを持つ三角形同士）
+        foreach (var tri in triangles)
+        {
+            HashSet<Triangle> neighborSet = new HashSet<Triangle>();
+            foreach (var edge in tri.GetEdges())
+            {
+                foreach (var other in edgeMap[edge])
+                {
+                    if (other != tri)
+                    {
+                        neighborSet.Add(other);
+                    }
+                }
+            }
+            tri.neighbors = neighborSet.ToList();
+        }
+    }
+
+    /// <summary>
+    /// 新しい頂点(point)と既存の頂点群(addedpoints)とのそれぞれの中点が、すべてメッシュコライダーの内部にあるかを確認します。
+    /// </summary>
+    /// <param name="meshCollider">判定対象のメッシュコライダー</param>
+    /// <param name="addedpoints">既存の頂点群</param>
+    /// <param name="point">新しく追加する頂点</param>
+    /// <returns>すべての中点が内部にあればtrue、一つでも外部にあればfalse</returns>
+    bool IsPointInsideMesh(MeshCollider meshCollider, IEnumerable<Vector3> addedpoints, Vector3 point)
+    {
+        foreach (var addedpoint in addedpoints)
+        {
+            Vector3 midPoint = (point + addedpoint) / 2;
+
+            bool pointInside = IsSinglePointInside(meshCollider, midPoint);
+            Debug.DrawLine(point, addedpoint, pointInside ? Color.blue : Color.red, 10f);
+            // 中点がメッシュの内側にあるか、ヘルパー関数でチェック
+            if (!pointInside)
+            {
+                // 一つでも中点が外側にあれば、その時点で false を返す
+                return false;
+            }
+        }
+        print("全ての中点が内側にあります");
+        // 全ての中点が内側にあれば true を返す
+        return true;
+    }
+
+    /// <summary>
+    /// 指定された単一の点がメッシュコライダーの内部または表面にあるかを堅牢に判定します。
+    /// 点の近傍をサンプリングし、複数方向へのレイキャストで内外をチェックします。
+    /// </summary>
+    /// <param name="meshCollider">判定対象のメッシュコライダー</param>
+    /// <param name="pointToCheck">判定する点</param>
+    /// <returns>点が内部または表面にあればtrue、そうでなければfalse</returns>
+    private bool IsSinglePointInside(MeshCollider meshCollider, Vector3 pointToCheck)
+    {
+        // 判定対象の点とその周囲の点をリストアップ
+        // わずかなオフセットで、表面に近い点の判定を安定させる
+        float offset = 0.01f;
+        List<Vector3> samplePoints = new List<Vector3>();
+
+        float[] offsets = { -offset, 0f, offset };
+
+        foreach (float x in offsets)
+        {
+            foreach (float y in offsets)
+            {
+                foreach (float z in offsets)
+                {
+
+                    if (x == 0f && y == 0f && z == 0f) continue;
+                    samplePoints.Add(pointToCheck + new Vector3(x, y, z));
+                }
+            }
+        }
+
+        // テストするレイの方向
+        Vector3[] directions = { Vector3.up, Vector3.right, Vector3.forward };
+
+        foreach (var samplePoint in samplePoints)
+        {
+            foreach (var direction in directions)
+            {
+                RaycastHit[] hits = Physics.RaycastAll(samplePoint, direction, float.MaxValue)
+                                         .Where(hit => hit.collider == meshCollider)
+                                         .ToArray();
+
+                // 交差回数が奇数なら「内側」と判定
+                if (hits.Length % 2 == 1)
+                {
+                    // 内側と判定された点を青で表示
+                    Debug.DrawRay(pointToCheck, Vector3.up * 0.1f, Color.blue, 10f);
+                    return true;
+                }
+            }
+        }
+
+        // 全てのテストで内側判定が出なかった場合、外側と判定された点を赤で表示
+        Debug.DrawRay(pointToCheck, Vector3.up * 0.1f, Color.red, 10f);
+        return false;
+    }
+}
