@@ -78,7 +78,7 @@ public class makeCollider : MonoBehaviour
             MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
             if (meshFilter == null) continue;
             runningCoroutineCount += 1;
-            StartCoroutine(AddSplitNotConvoxCollider(obj));
+            yield return AddSplitNotConvoxCollider(obj);
             obj.GetComponent<MeshRenderer>().enabled = false;
             hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
 
