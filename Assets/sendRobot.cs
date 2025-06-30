@@ -36,12 +36,33 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     NetworkVariableWritePermission.Owner     // オーナーのみ書き込める
     );
 
+    IEnumerator setPlayer()
+    {
+        while (true)
+        {
+            var player = GameObject.FindGameObjectsWithTag("Player")
+                .Select(obj => obj.GetComponent<player>())
+                .FirstOrDefault(p => p != null && p.GetComponent<NetworkObject>()?.OwnerClientId == OwnerClientId);
+
+            if (player != null)
+            {
+                player.setRobot(gameObject);
+                yield break;
+            }
+
+            yield return null;
+        }
+    }
+
     // public TMP_InputField passField;
     public override void OnNetworkSpawn()
     {
 
-        fileHash.OnValueChanged += OnFileHashUpdate;
-        OnFileHashUpdate(0, fileHash.Value);
+        //playerに自身を渡す
+
+        StartCoroutine(setPlayer());
+
+
         if (NetworkManager.Singleton.IsServer)
         {
             // robotname.Value = $"{Guid.NewGuid()}";
@@ -52,7 +73,8 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         //     var robot = NetworkManager.Singleton.SceneManager.LoadScene("robot", LoadSceneMode.Additive);
         //     SceneManager.MoveGameObjectToScene(this.gameObject, SceneManager.GetSceneByName("robot"));
         // }
-        textMesh.transform.parent = transform.root;
+        if (textMesh != null)
+            textMesh.transform.parent = transform.root;
 
         NetworkManager networkManager = NetworkManager.Singleton;
         // transform.position = new Vector3(0, 0, this.OwnerClientId * 10);
@@ -61,8 +83,13 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         if (NetworkObject.IsOwner)
         {
 
+            this.name += "owner";
             ownerLoad();
-
+        }
+        else
+        {
+            fileHash.OnValueChanged += OnFileHashUpdate;
+            OnFileHashUpdate(0, fileHash.Value);
 
         }
 
@@ -122,7 +149,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     }
 
 
-    //普通に読み込む
+    //ownerなら普通に読み込む
     void ownerLoad()
     {
         // filePath = GameObject.Find("glbPassInput").GetComponent<TMP_InputField>().text.Replace("\"", "");
@@ -136,7 +163,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         datacomplete = true;
         fileHash.Value = FNV1a(data64);
         // Destroy(textMesh.gameObject);
-        StartCoroutine(generate());
+        StartCoroutine(generate(data64));
     }
 
 
@@ -161,7 +188,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
                 data64 = FileToBase64(cacheFilePath);
                 datacomplete = true;
                 // Destroy(textMesh.gameObject);
-                StartCoroutine(generate());
+                StartCoroutine(generate(data64));
                 return;
             }
         }
@@ -181,6 +208,26 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
 
     }
+
+
+
+    public void playerReload()
+    {
+        playerReloadServerRpc();
+    }
+
+    [ServerRpc]
+    private void playerReloadServerRpc()
+    {
+        foreach (var part in GetComponent<generateRobot>().parts)
+        {
+            part.GetComponent<NetworkObject>().Despawn();
+            Destroy(part);
+        }
+        // Destroy(this.gameObject);
+    }
+
+
 
 
     [Rpc(SendTo.SpecifiedInParams)]
@@ -223,7 +270,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             cacheRobotFile();
             // print(data64);
             // GetComponent<generateRobot>().isServer = true;
-            StartCoroutine(generate());
+            StartCoroutine(generate(data64));
         }
     }
 
@@ -299,7 +346,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
                 // print(data64);
                 datacomplete = true;
                 cacheRobotFile();
-                StartCoroutine(generate());
+                StartCoroutine(generate(data64));
             }
         }
     }
@@ -389,7 +436,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
 
     public GameObject NetCodePart;
-    IEnumerator generate()
+    IEnumerator generate(String data64)
     {
 
         generateRobot generateRobot = GetComponent<generateRobot>();

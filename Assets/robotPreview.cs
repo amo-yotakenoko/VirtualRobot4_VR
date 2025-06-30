@@ -95,7 +95,7 @@ public class robotPreview : MonoBehaviour
     {
         foreach (Transform child in parent)
         {
-            print(child.gameObject.name);
+            // print(child.gameObject.name);
             Light LightComponent = child.GetComponent<Light>();
             if (LightComponent != null)
             {

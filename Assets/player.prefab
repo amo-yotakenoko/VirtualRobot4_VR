@@ -182,11 +182,7 @@ GameObject:
   - component: {fileID: 1117912266894500611}
   - component: {fileID: 7458082544947125998}
   - component: {fileID: 8028492299297707843}
-  - component: {fileID: 1422742795612470589}
-  - component: {fileID: 5246835186213168815}
-  - component: {fileID: 906718038420793391}
   - component: {fileID: 1101962757371671485}
-  - component: {fileID: 2196145338180173806}
   - component: {fileID: 6169949546442675134}
   - component: {fileID: 1514200674517655241}
   - component: {fileID: 2592075154592350465}
@@ -247,69 +243,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f649b42b760ebb46b091ac6e042fd98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1422742795612470589
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8523187551700105784}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b781fe673a5534e91b1e802df4b9362e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  importSettings:
-    nodeNameMethod: 0
-    animationMethod: 1
-    generateMipMaps: 0
-    texturesReadable: 0
-    defaultMinFilterMode: 9729
-    defaultMagFilterMode: 9729
-    anisotropicFilterLevel: 1
-  url: 
-  loadOnStartup: 0
-  sceneId: -1
-  playAutomatically: 0
-  streamingAsset: 0
-  instantiationSettings:
-    mask: -1
-    layer: 0
-    skinUpdateWhenOffscreen: 1
-    lightIntensityFactor: 0.002
-    sceneObjectCreation: 2
---- !u!114 &5246835186213168815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8523187551700105784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc4634b2dcfcd6f4e91634af77bd4b73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gltf: {fileID: 1422742795612470589}
-  partprefab: {fileID: 4000220617328373686, guid: a3ab5ea1efecca445b7675e4ffc1151b,
+  robotPrefab: {fileID: 3338271661850553643, guid: cf124d4adf33b5d4cab249102c9fd8e6,
     type: 3}
-  robotController: {fileID: 906718038420793391}
-  parts: []
-  colliders: []
-  objs: []
---- !u!114 &906718038420793391
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8523187551700105784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1c7cfd9db3d5a304aa5d91ef40062f55, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  deviceList: []
+  robot: {fileID: 0}
 --- !u!114 &1101962757371671485
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,96 +259,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
---- !u!114 &2196145338180173806
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8523187551700105784}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b193bcb179a2b3a4ea5146eebc52fbf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  filePath: 
-  robotname:
-    m_InternalValue:
-      utf8LengthInBytes: 0
-      bytes:
-        offset0000:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        offset0016:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        offset0032:
-          byte0000: 0
-          byte0001: 0
-          byte0002: 0
-          byte0003: 0
-          byte0004: 0
-          byte0005: 0
-          byte0006: 0
-          byte0007: 0
-          byte0008: 0
-          byte0009: 0
-          byte0010: 0
-          byte0011: 0
-          byte0012: 0
-          byte0013: 0
-          byte0014: 0
-          byte0015: 0
-        byte0048: 0
-        byte0049: 0
-        byte0050: 0
-        byte0051: 0
-        byte0052: 0
-        byte0053: 0
-        byte0054: 0
-        byte0055: 0
-        byte0056: 0
-        byte0057: 0
-        byte0058: 0
-        byte0059: 0
-        byte0060: 0
-        byte0061: 0
-  data64: 
-  datacomplete: 0
-  fileHash:
-    m_InternalValue: 0
-  sendTextSize: 1024
-  textMesh: {fileID: 5211583884493864911}
-  NetCodePart: {fileID: 3211947520899387043, guid: d5e7c2c0abde10e43b4088c37e1bd5ed,
-    type: 3}
 --- !u!114 &6169949546442675134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -425,7 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185b23d03fea81f4c9a4d032fc9240e8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotController: {fileID: 906718038420793391}
+  robotController: {fileID: 0}
 --- !u!114 &1514200674517655241
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -438,7 +284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185e34eac40488b4eb816ea189208f10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotController: {fileID: 906718038420793391}
+  robotController: {fileID: 0}
 --- !u!114 &2592075154592350465
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,7 +297,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e01fe9fe0060c9d48be6dc18794895bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotController: {fileID: 906718038420793391}
+  robotController: {fileID: 0}
 --- !u!114 &5089823423195015000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,5 +310,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6066a668343cce4583a271996fca34e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  robotController: {fileID: 906718038420793391}
+  robotController: {fileID: 0}
   requestId: 0

@@ -24,10 +24,40 @@ public class player : Unity.Netcode.NetworkBehaviour
 {
     // Start is called before the first frame update
     public static player ownerPlayer;
-    void Start()
+
+    public GameObject robotPrefab;
+
+    public GameObject robot;
+    public robotController robotController;
+
+    public void setRobot(GameObject r)
     {
+        robot = r;
+        robotController = r.GetComponent<robotController>();
+    }
+
+
+
+
+    public override void OnNetworkSpawn()
+    {
+        Debug.Log($"OnNetworkSpawn called for GameObject: {gameObject.name}, Instance ID: {GetInstanceID()}, NetworkObjectId: {NetworkObjectId}, IsServer: {IsServer}, IsClient: {IsClient}  ");
+        if (IsOwner && robot == null)
+        {
+
+            RequestSpawnServerRpc();
+        }
+
         if (NetworkObject.IsLocalPlayer) ownerPlayer = this;
     }
+
+    [ServerRpc]
+    void RequestSpawnServerRpc(ServerRpcParams rpcParams = default)
+    {
+        robot = Instantiate(robotPrefab, transform.position, Quaternion.identity);
+        robot.GetComponent<NetworkObject>().SpawnWithOwnership(rpcParams.Receive.SenderClientId);
+    }
+
 
     // Update is called once per frame
     void Update()
@@ -37,7 +67,7 @@ public class player : Unity.Netcode.NetworkBehaviour
     [Rpc(SendTo.Server)]
     public void rescueServerRpc(Vector3 offset)
     {
-        foreach (var p in GetComponent<generateRobot>().partspos)
+        foreach (var p in robot.GetComponent<generateRobot>().partspos)
         {
             // p.Key.transform.localPosition = p.Value;
             // p.Key.transform.rotation = Quaternion.identity;

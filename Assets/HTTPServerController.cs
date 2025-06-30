@@ -4,10 +4,12 @@ using System.Text;
 using System.Threading;
 using System.IO;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Collections;
 
 public class HTTPServerController : MonoBehaviour
 {
-    public robotController robotController;
+    // public robotController robotController;
     private HttpListener listener;
     private Thread serverThread;
 
@@ -16,16 +18,22 @@ public class HTTPServerController : MonoBehaviour
 
 
     public static int port = 8080;
-    void Start()
+    private IEnumerator Start()
     {
+        yield return null;
+        // ownerPlayer が null でなければすぐ進む
+        while (player.ownerPlayer == null)
+        {
+            yield return null; // 1フレーム待つ
+        }
+
         if (player.ownerPlayer.gameObject != this.gameObject)
         {
             this.enabled = false;
-            return;
+            yield break;
         }
-
+        print("HTTP サーバーを開始");
         port = int.Parse(Settings.load("HTTPport", "8080"));
-
 
         listener = new HttpListener();
         listener.Prefixes.Add($"http://*:{port}/");
@@ -131,7 +139,7 @@ public class HTTPServerController : MonoBehaviour
                 // エントリの情報を表示（ここではidとレスポンスの内容を表示）
                 print($"ID: {entry.id}, Request: {entry.requestText}");
 
-                Response responseData = robotController.commandExecute(entry.requestText);
+                Response responseData = player.ownerPlayer.robotController.commandExecute(entry.requestText);
                 responseData.id = entry.id;
                 responseQueue.Enqueue(responseData);
             }

@@ -79,7 +79,7 @@ public class robotSelect : MonoBehaviour
             // 1フレーム待機して処理を中断
             yield return null;
 
-            yield return new WaitForSeconds(0.1f);
+            // yield return new WaitForSeconds(0.1f);
 
         }
     }

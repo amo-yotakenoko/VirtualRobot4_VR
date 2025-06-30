@@ -16,6 +16,16 @@ public class selfSpown : MonoBehaviour
     {
         // Wait until the NetworkManager is listening
         yield return new WaitUntil(() => NetworkManager.Singleton.IsListening);
-        GetComponent<Unity.Netcode.NetworkObject>().Spawn();
+        yield return new WaitForSeconds(0.1f); // 少し待つことで、NetworkManagerが完全に初期化されるのを確実にする
+
+        // すでにスポーン済みでなければスポーンする
+        if (!GetComponent<NetworkObject>().IsSpawned)
+        {
+
+            GetComponent<Unity.Netcode.NetworkObject>().Spawn();
+
+        }
+
+        Destroy(this);
     }
 }

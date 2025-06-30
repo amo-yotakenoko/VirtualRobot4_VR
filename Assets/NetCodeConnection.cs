@@ -199,7 +199,7 @@ public class NetCodeConnection : MonoBehaviour
 
     void LoadField()
     {
-        NetworkManager.Singleton.SceneManager.LoadScene("field", LoadSceneMode.Additive);
+        // NetworkManager.Singleton.SceneManager.LoadScene("field", LoadSceneMode.Additive);
 
     }
 }
