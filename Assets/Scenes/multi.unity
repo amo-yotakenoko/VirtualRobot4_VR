@@ -5853,7 +5853,7 @@ PrefabInstance:
     - target: {fileID: 3993892977780272820, guid: 1097ffa2be97b6d4e917b2f9d53568c6,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00007123926
+      value: -0.0000076293945
       objectReference: {fileID: 0}
     - target: {fileID: 3993892977780272820, guid: 1097ffa2be97b6d4e917b2f9d53568c6,
         type: 3}
@@ -7303,7 +7303,6 @@ GameObject:
   - component: {fileID: 2033549760}
   - component: {fileID: 2033549759}
   - component: {fileID: 2033549758}
-  - component: {fileID: 2033549761}
   - component: {fileID: 2033549757}
   m_Layer: 5
   m_Name: rescue
@@ -7439,27 +7438,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2033549755}
   m_CullTransparentMesh: 1
---- !u!114 &2033549761
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2033549755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1189510771
-  InScenePlacedSourceGlobalObjectIdHash: 0
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!1 &2042959255
 GameObject:
   m_ObjectHideFlags: 0

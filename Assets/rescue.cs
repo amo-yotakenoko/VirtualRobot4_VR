@@ -19,7 +19,7 @@ using Unity.Mathematics;
 
 using UnityEngine.SceneManagement;
 using Unity.Netcode;
-public class rescue : Unity.Netcode.NetworkBehaviour
+public class rescue : MonoBehaviour
 {
     // Start is called before the first frame update
 

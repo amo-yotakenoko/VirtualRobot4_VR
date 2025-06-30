@@ -11,6 +11,7 @@ using System.Text;
 using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 public class robotPreview : MonoBehaviour
 {
     // Start is called before the first frame update
@@ -18,16 +19,17 @@ public class robotPreview : MonoBehaviour
     public Transform gltfLoaded;
     public Camera c;
     public string directoryPath;
+    public string glbpath;
     RenderTexture renderTexture;
     public IEnumerator generate(string path)
     {
         cameraSet();
 
         directoryPath = path;
-        string glbpath = Directory.GetFiles(path)
-                                  .Where(file => Path.GetExtension(file) == ".glb")
-                                  .OrderByDescending(file => new FileInfo(file).LastWriteTime)
-                                  .FirstOrDefault();
+        glbpath = Directory.GetFiles(path)
+                                   .Where(file => Path.GetExtension(file) == ".glb")
+                                   .OrderByDescending(file => new FileInfo(file).LastWriteTime)
+                                   .FirstOrDefault();
         if (glbpath == null)
         {
             Debug.LogError("No .glb file found in directory: " + path);
@@ -149,12 +151,23 @@ public class robotPreview : MonoBehaviour
     }
     public robotSelect robotSelect;
     public Toggle toggle;
+
+    public GameObject robotChangeButton;
     public void toggleChanged()
     {
         if (toggle.isOn)
         {
             robotSelect.selectRobot(directoryPath, renderTexture);
         }
+        robotChangeButton.SetActive(toggle.isOn && SceneManager.GetActiveScene().name == "multi");
+    }
+
+
+    public void robotChange()
+    {
+        robotSelect.glbFullPath = glbpath;
+        // print("交代");
+        player.ownerPlayer.robotChange();
     }
 
 

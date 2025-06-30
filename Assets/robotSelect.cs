@@ -76,7 +76,7 @@ public class robotSelect : MonoBehaviour
                 // yield return new WaitForSeconds(0.1f);
             }
 
-            // 1フレーム待機して処理を中断
+
             yield return null;
 
             // yield return new WaitForSeconds(0.1f);
@@ -167,6 +167,7 @@ public class robotSelect : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         // print(glbFullPath);
         // image.GetComponent<RectTransform>().sizeDelta = new Vector2(100, 100);
     }

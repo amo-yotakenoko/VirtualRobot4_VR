@@ -54,7 +54,8 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         {
             Vector3 offset = new Vector3(command.x, command.y, command.z);
             print("teleport" + offset);
-            rescue.Instance.rescueStart(offset);
+            player.ownerPlayer.rescueServerRpc(offset);
+            // rescue.Instance.rescueStart(offset);
             responseData.value = "1";
 
         }

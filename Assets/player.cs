@@ -120,5 +120,19 @@ public class player : Unity.Netcode.NetworkBehaviour
         }
     }
 
+    public void robotChange()
+    {
+        DestroyRobotServerRpc();
+        RequestSpawnServerRpc();
+    }
+
+    [ServerRpc]
+    void DestroyRobotServerRpc(ServerRpcParams rpcParams = default)
+    {
+        robot.GetComponent<NetworkObject>().Despawn();
+        Destroy(robot.gameObject);
+    }
+
+
 
 }
