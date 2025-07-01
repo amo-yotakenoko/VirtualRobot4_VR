@@ -379,7 +379,7 @@ public class generateRobot : MonoBehaviour
 
 
             Camera cameraComponent = obj.GetComponent<Camera>();
-            if ((isServer || isOwner) && cameraComponent != null && !cameraComponent.enabled)
+            if ((/*isServer ||*/ isOwner) && cameraComponent != null && !cameraComponent.enabled)
             {
                 cameraComponent.enabled = true;
                 cameraComponent.gameObject.tag = "playerCamera";
