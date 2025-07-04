@@ -166,6 +166,7 @@ public class robotPreview : MonoBehaviour
     public void robotChange()
     {
         robotSelect.glbFullPath = glbpath;
+        print("選択中のを" + glbpath + "に変更 robotChange()");
         // print("交代");
         player.ownerPlayer.robotChange();
     }

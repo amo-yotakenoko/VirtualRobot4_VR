@@ -98,7 +98,7 @@ public class robotSelect : MonoBehaviour
         rp.robotContentUI.transform.localScale = new Vector3(1, 1, 1);
         rp.robotSelect = this;
         rp.toggle.group = GetComponent<ToggleGroup>();
-        rp.toggle.isOn = true;
+        // rp.toggle.isOn = true;
         rp.toggle.onValueChanged.Invoke(true);
         robotpreview.transform.position = new Vector3(robotpos, -100, 0);
         robotpos += 10;
@@ -144,6 +144,7 @@ public class robotSelect : MonoBehaviour
             if (Path.GetExtension(file) == ".glb")
             {
                 glbFullPath = file;
+                print("選択中のを" + glbFullPath + "に変更");
                 glbPath = Path.GetFileName(file);
             }
             if (Path.GetExtension(file) == ".py" && Path.GetFileName(file)[0] != '_')
