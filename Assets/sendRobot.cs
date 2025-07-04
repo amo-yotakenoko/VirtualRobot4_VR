@@ -154,7 +154,10 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     {
         // filePath = GameObject.Find("glbPassInput").GetComponent<TMP_InputField>().text.Replace("\"", "");
         if (filePath == "")
+        {
+            print("★robotSelect.glbFullPath:" + robotSelect.glbFullPath + "★");
             filePath = robotSelect.glbFullPath;
+        }
         print("filePath" + filePath);
         // filePath = @$"C:/Users/taken/projects/VirtualRobot4/robot1/test1.glb";
         // filePath = @$"./test1.glb";
@@ -249,7 +252,8 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             // Debug.Log(text.Substring(i, Mathf.Min(10, text.Length - i)));
             string t = data64.Substring(i, Mathf.Min(sendTextSize, data64.Length - i));
             ReceiveDataServerRpc(t, length);
-            textMesh.text = $"{i}/{length}\n{(int)(((float)i / length) * 100)}%";
+            if (textMesh != null)
+                textMesh.text = $"{i}/{length}\n{(int)(((float)i / length) * 100)}%";
             yield return null;
         }
         // Destroy(textMesh.gameObject);
@@ -263,7 +267,8 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         if (datacomplete) return;
         // print(data);
         data64 += data;
-        textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
+        if (textMesh != null)
+            textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
         if (data64.Length == length)
         {
             datacomplete = true;
@@ -340,7 +345,8 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         {
 
             data64 += data;
-            textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
+            if (textMesh != null)
+                textMesh.text = $"{data64.Length}/{length}\n{(int)(((float)data64.Length / length) * 100)}%";
             if (data64.Length == length)
             {
                 // print(data64);

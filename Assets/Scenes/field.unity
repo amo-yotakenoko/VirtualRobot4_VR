@@ -122,7 +122,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &192893723
+--- !u!1001 &205293876
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -130,82 +130,83 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1059840139465826849, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
-        type: 3}
-      propertyPath: GlobalObjectIdHash
-      value: 1017063793
-      objectReference: {fileID: 0}
-    - target: {fileID: 1059840139465826849, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
-        type: 3}
-      propertyPath: InScenePlacedSourceGlobalObjectIdHash
-      value: 1976408400
-      objectReference: {fileID: 0}
-    - target: {fileID: 2269059505634363127, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
-        type: 3}
-      propertyPath: m_Name
-      value: field Variant
-      objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 15.97
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalRotation.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalRotation.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7401313294211784652, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
+    - target: {fileID: 36198986852704061, guid: cf124d4adf33b5d4cab249102c9fd8e6,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3338271661850553643, guid: cf124d4adf33b5d4cab249102c9fd8e6,
+        type: 3}
+      propertyPath: m_Name
+      value: robot
+      objectReference: {fileID: 0}
+    - target: {fileID: 3646325628098200783, guid: cf124d4adf33b5d4cab249102c9fd8e6,
+        type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 4267070258
+      objectReference: {fileID: 0}
+    - target: {fileID: 3646325628098200783, guid: cf124d4adf33b5d4cab249102c9fd8e6,
+        type: 3}
+      propertyPath: InScenePlacedSourceGlobalObjectIdHash
+      value: 179387195
+      objectReference: {fileID: 0}
+    - target: {fileID: 8566585953349989644, guid: cf124d4adf33b5d4cab249102c9fd8e6,
+        type: 3}
+      propertyPath: filePath
+      value: C:\Users\taken\projects\VirtualRobot4_VR\field\field.glb
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 573572682589116586, guid: 5643d5ed51f3be847b7cf1145fa7b70d,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 0}
-  m_SourcePrefab: {fileID: 100100000, guid: 5643d5ed51f3be847b7cf1145fa7b70d, type: 3}
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cf124d4adf33b5d4cab249102c9fd8e6, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 192893723}
+  - {fileID: 205293876}

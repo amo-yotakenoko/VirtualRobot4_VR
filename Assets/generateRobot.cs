@@ -377,7 +377,7 @@ public class generateRobot : MonoBehaviour
 
             }
 
-
+            //TODO:面白いのでサーバーからは全カメラ見れるようにしたい
             Camera cameraComponent = obj.GetComponent<Camera>();
             if ((/*isServer ||*/ isOwner) && cameraComponent != null && !cameraComponent.enabled)
             {
