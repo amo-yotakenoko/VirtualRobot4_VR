@@ -34,7 +34,9 @@ public class fps : MonoBehaviour
             moveHorizontal = 1f;
         if (Input.GetKey(KeyCode.A))
             moveHorizontal = -1f;
-        Vector3 moveDirection = new Vector3(moveHorizontal, 0f, moveVertical).normalized;
+
+
+        Vector3 moveDirection = new Vector3(moveHorizontal, 0f, moveVertical).normalized * (Input.GetKey(KeyCode.LeftControl) ? 3 : 1);
 
         transform.Translate(moveDirection * flySpeed * Time.deltaTime);
 
