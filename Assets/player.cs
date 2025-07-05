@@ -32,6 +32,7 @@ public class player : Unity.Netcode.NetworkBehaviour
 
     public void setRobot(GameObject r)
     {
+        print("setrobot" + r);
         robot = r;
         robotController = r.GetComponent<robotController>();
     }
@@ -64,6 +65,8 @@ public class player : Unity.Netcode.NetworkBehaviour
     {
 
     }
+
+
     [Rpc(SendTo.Server)]
     public void rescueServerRpc(Vector3 offset)
     {

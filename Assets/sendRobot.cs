@@ -41,9 +41,10 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         while (true)
         {
             var player = GameObject.FindGameObjectsWithTag("Player")
-                .Select(obj => obj.GetComponent<player>())
-                .FirstOrDefault(p => p != null && p.GetComponent<NetworkObject>()?.OwnerClientId == OwnerClientId);
-
+      .Where(obj => obj.scene == gameObject.scene) // 自分と同じシーンだけ
+      .Select(obj => obj.GetComponent<player>())
+      .FirstOrDefault(p => p != null &&
+                           p.GetComponent<NetworkObject>()?.OwnerClientId == OwnerClientId);
             if (player != null)
             {
                 player.setRobot(gameObject);
