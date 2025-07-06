@@ -77,10 +77,32 @@ public class makeCollider : MonoBehaviour
             // yield return AddSplitNotConvoxCollider(obj);
             MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
             if (meshFilter == null) continue;
-            runningCoroutineCount += 1;
-            yield return AddSplitNotConvoxCollider(obj);
-            obj.GetComponent<MeshRenderer>().enabled = false;
-            hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
+
+
+            // --- ここからが最適化のための事前チェック ---
+            // 1. 仮のMeshColliderを追加して、凸(convex)に設定
+            var tempCollider = obj.AddComponent<MeshCollider>();
+            tempCollider.convex = true;
+            tempCollider.sharedMesh = meshFilter.mesh;
+
+            // 2. convoxErrorで、この単純な凸コライダーで問題ないかチェック
+            bool isComplexMesh = convoxError(obj, meshFilter.mesh, tempCollider);
+            if (convoxError(obj, meshFilter.mesh, tempCollider))
+            {
+                Destroy(tempCollider);
+                runningCoroutineCount += 1;
+                yield return AddSplitNotConvoxCollider(obj);
+                obj.GetComponent<MeshRenderer>().enabled = false;
+                hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
+
+            }
+            else
+            {
+                // obj.GetComponent<MeshRenderer>().enabled = false;
+                // hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
+                colliders.Add(tempCollider);
+            }
+
 
             // yield return null;
             // yield return AddSplitNotConvoxCollider(obj);
@@ -89,7 +111,7 @@ public class makeCollider : MonoBehaviour
             // yield return null;
             // yield return null;
         }
-
+        print("makecollider終了");
         while (runningCoroutineCount > 0)
         {
 
@@ -506,7 +528,7 @@ public class makeCollider : MonoBehaviour
 
 
 
-            yield return null;
+            // yield return null;
             yield return GetChildObjects(child);
         }
     }

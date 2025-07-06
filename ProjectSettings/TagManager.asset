@@ -11,6 +11,7 @@ TagManager:
   - Destroyer
   - parts
   - playerCamera
+  - robot
   layers:
   - Default
   - TransparentFX
