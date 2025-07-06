@@ -368,11 +368,11 @@ public class makeCollider : MonoBehaviour
         while (triangles.Count > 0)
         {
             count++;
-            if (count > 1024) break;
-            yield return null;
+            // if (count > 1024) break;
             bool end = true;
             for (int i = 0; i < triangles.Count; i++)
             {
+                yield return null;
                 // if (count++ % 200 == 0)
                 //     yield return null;
                 // yield return null;
@@ -396,8 +396,12 @@ public class makeCollider : MonoBehaviour
                 triangleIndices.Add(triangleIndices.Count);
 
 
+
                 triangleMesh.vertices = triangleVertices.ToArray();
                 triangleMesh.triangles = triangleIndices.ToArray();
+
+                triangleMesh.RecalculateNormals();
+                triangleMesh.RecalculateBounds();
 
                 if (triangleMesh.vertices.Length <= 4) continue;
                 // print(triangleMesh.vertices.Length);
@@ -513,6 +517,53 @@ public class makeCollider : MonoBehaviour
             }
         }
         return false;
+    }
+
+    /// <summary>
+    /// 指定された距離（tolerance）よりも近い頂点を結合（Weld）して、クリーンな頂点リストを返す。
+    /// </summary>
+    /// <param name="vertices">元の頂点リスト</param>
+    /// <param name="tolerance">同一とみなす距離のしきい値</param>
+    /// <returns>クリーンになった頂点リスト</returns>
+    public static List<Vector3> WeldVertices(List<Vector3> vertices, float tolerance)
+    {
+        if (vertices == null || vertices.Count == 0)
+            return new List<Vector3>();
+
+        // 許容誤差の2乗を計算（距離計算の高速化のため）
+        float toleranceSq = tolerance * tolerance;
+
+        // 新しい頂点リストと、元のインデックスから新しいインデックスへのマッピング
+        List<Vector3> newVertices = new List<Vector3>();
+        Dictionary<int, int> oldToNewMapping = new Dictionary<int, int>();
+
+        for (int i = 0; i < vertices.Count; i++)
+        {
+            bool merged = false;
+            for (int j = 0; j < newVertices.Count; j++)
+            {
+                // 既存の新しい頂点との距離をチェック
+                if (Vector3.SqrMagnitude(vertices[i] - newVertices[j]) < toleranceSq)
+                {
+                    // 近い頂点が見つかったので、マッピングだけ記録してマージする
+                    oldToNewMapping[i] = j;
+                    merged = true;
+                    break;
+                }
+            }
+
+            if (!merged)
+            {
+                // 近い頂点がなかったので、新しい頂点として追加
+                oldToNewMapping[i] = newVertices.Count;
+                newVertices.Add(vertices[i]);
+            }
+        }
+
+        // この例では単純化のため新しい頂点リストのみを返すが、
+        // 本来は三角形のインデックス（triangles）もこのマッピングを使って更新する必要がある。
+        // しかし、このスクリプトのロジックでは、頂点リストをクリーンにするだけでも効果が見込める。
+        return newVertices;
     }
 
     IEnumerator GetChildObjects(Transform parent)

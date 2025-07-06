@@ -17,13 +17,7 @@ public class fieldManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // // print("ooo" + name);
-        // // 初期状態では何もロードしない
-        // if (NetworkManager.Singleton.IsServer)
-        // {
 
-        //     NetworkManager.Singleton.SceneManager.LoadScene("field", LoadSceneMode.Additive);
-        // }
     }
 
     // Update is called once per frame
