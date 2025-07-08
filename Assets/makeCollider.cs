@@ -182,6 +182,8 @@ public class makeCollider : MonoBehaviour
     // public List<Triangle> triangles = new List<Triangle>();
     IEnumerator AddSplitNotConvoxCollider(GameObject obj)
     {
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
         // float lastYieldTime = Time.realtimeSinceStartup;
 
         List<Triangle> triangles = new List<Triangle>();
@@ -198,6 +200,11 @@ public class makeCollider : MonoBehaviour
         int splitcount = 0;
         while (allAddedTriangleIds.Count != mesh.triangles.Length / 3)
         {
+            if (stopwatch.ElapsedMilliseconds > 5)
+            {
+                yield return null;
+                stopwatch.Restart();
+            }
 
             splitcount += 1;
             for (int i = 0; i < mesh.triangles.Length; i += 1)//ないものを追加
@@ -220,6 +227,11 @@ public class makeCollider : MonoBehaviour
 
             while (true)
             {
+                if (stopwatch.ElapsedMilliseconds > 5)
+                {
+                    yield return null;
+                    stopwatch.Restart();
+                }
 
                 bool end = true;
                 for (int i = 0; i < mesh.triangles.Length; i += 3)
@@ -334,7 +346,9 @@ public class makeCollider : MonoBehaviour
 
     IEnumerator AddNotConvoxCollider(GameObject obj, Mesh mesh, List<Triangle> triangles)
     {
-        float lastYieldTime = Time.realtimeSinceStartup;
+        System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+        // float lastYieldTime = Time.realtimeSinceStartup;
         // print("AddNotConvoxCollider");
         var collider = obj.AddComponent<MeshCollider>();
         colliders.Add(collider);
@@ -372,7 +386,11 @@ public class makeCollider : MonoBehaviour
             bool end = true;
             for (int i = 0; i < triangles.Count; i++)
             {
-                yield return null;
+                if (stopwatch.ElapsedMilliseconds > 5)
+                {
+                    yield return null;
+                    stopwatch.Restart();
+                }
                 // if (count++ % 200 == 0)
                 //     yield return null;
                 // yield return null;

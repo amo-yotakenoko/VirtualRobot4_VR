@@ -26,7 +26,8 @@ public class fps : MonoBehaviour
             {
                 cursorLockRequested = false;
             }
-            if (Input.GetMouseButtonDown(0))
+            // Re-lock the cursor only if the game is not paused and not clicking on a UI element.
+            if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject() && netWorkUI.pause == false)
             {
                 cursorLockRequested = true;
             }
