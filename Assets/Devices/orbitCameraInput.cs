@@ -29,23 +29,55 @@ public class orbitCameraInput : MonoBehaviour
     float mouseX;
     float mouseY;
     float distance;
+    private bool cursorLockRequested = true;
+    private bool wasActiveLastFrame = false;
 
     // Update is called once per frame
     void Update()
     {
+        bool isActive = (cameraUI.activeCamera == c);
 
+        if (isActive)
+        {
+            wasActiveLastFrame = true;
 
-        if (Cursor.lockState != CursorLockMode.Locked) return;
-        if (cameraUI.activeCamera != c) return;
-        mouseX += Input.GetAxis("Mouse X");
-        mouseY += Input.GetAxis("Mouse Y");
+            // This is the active camera, so manage cursor and input.
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                cursorLockRequested = false;
+            }
+            if (Input.GetMouseButtonDown(0))
+            {
+                cursorLockRequested = true;
+            }
 
-        transform.localEulerAngles = new Vector3(0, mouseX, 0);
-        y.localEulerAngles = new Vector3(-mouseY, 0, 0);
-        distance -= Input.GetAxis("Mouse ScrollWheel") * 0.8f;
-        if (distance < 0) distance = 0;
+            if (cursorLockRequested)
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
 
-        c.transform.localPosition = new Vector3(0, 0, -distance);
-        c.transform.LookAt(this.transform);
+            if (Cursor.lockState != CursorLockMode.Locked) return;
+
+            mouseX += Input.GetAxis("Mouse X");
+            mouseY += Input.GetAxis("Mouse Y");
+
+            transform.localEulerAngles = new Vector3(0, mouseX, 0);
+            y.localEulerAngles = new Vector3(-mouseY, 0, 0);
+            distance -= Input.GetAxis("Mouse ScrollWheel") * 0.8f;
+            if (distance < 0) distance = 0;
+
+            c.transform.localPosition = new Vector3(0, 0, -distance);
+            c.transform.LookAt(this.transform);
+        }
+        else if (wasActiveLastFrame)
+        {
+            // I was active, but now I'm not. Relinquish cursor control.
+            Cursor.lockState = CursorLockMode.None;
+            wasActiveLastFrame = false;
+        }
     }
 }

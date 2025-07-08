@@ -71,7 +71,7 @@ public class netWorkUI : MonoBehaviour
         {
             print("接続町");
         }
-        Cursor.lockState = !pause ? CursorLockMode.Locked : CursorLockMode.None;
+        // Cursor.lockState = !pause ? CursorLockMode.Locked : CursorLockMode.None;
         networkPanel.gameObject.SetActive(pause);
 
     }
