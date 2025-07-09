@@ -12,7 +12,7 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
+  companyName: takenoko
   productName: VirtualRobot4_VR
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
@@ -143,8 +143,10 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.0.1
-  preloadedAssets: []
+  bundleVersion: 4.0.1
+  preloadedAssets:
+  - {fileID: -6283244721492138042, guid: e3aee76b9372917449aef639e2f74814, type: 2}
+  - {fileID: -799144910338680681, guid: 87b413c5a910b15498a98200731b1754, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -293,7 +295,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 726899522e5ee9441845c1ee87577163, type: 3}
+      m_Icon: {fileID: 2800000, guid: 59db40cfedbd93143a489dfc73d6149b, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
