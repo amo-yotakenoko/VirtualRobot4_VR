@@ -418,6 +418,17 @@ public class generateRobot : MonoBehaviour
                 sensorDevice.sensor = obj.AddComponent<DistanceSensor>();
             }
 
+            if (isOwner && device != null && device.type == "goal")
+            {
+                robotController.goal sensorDevice = device as robotController.goal;
+
+                Goal goal = obj.AddComponent<Goal>();
+                goal.device = device;
+                //衝突判定用
+                Rigidbody rb = obj.AddComponent<Rigidbody>();
+                rb.isKinematic = true;
+            }
+
 
 
         }

@@ -328,6 +328,13 @@ public class robotController : Unity.Netcode.NetworkBehaviour
     }
 
 
+    public class goal : Device
+    {
+
+
+    }
+
+
 }
 
 

@@ -168,6 +168,7 @@ public class NetCodeConnection : MonoBehaviour
         // Relay鯖へのJoinCode取得
         string joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
         print("joincode" + joinCode);
+        FindObjectOfType<netWorkUI>().joinCode.gameObject.SetActive(true);
         FindObjectOfType<netWorkUI>().joinCode.text = joinCode;
         // Lobby作成
         Lobby lobby = await Lobbies.Instance.CreateLobbyAsync(lobbyName, maxPlayers, createOptions);
