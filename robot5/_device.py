@@ -58,5 +58,4 @@ class Orbitcamera:
 A = Servo("A")
 B = Servo("B")
 C = Servo("C")
-C1 = Servo("C1")
-C2 = Servo("C2")
+hand = Servo("hand")
