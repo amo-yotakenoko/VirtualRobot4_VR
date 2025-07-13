@@ -17,7 +17,7 @@ public class pointCounter : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        print(IsServer);
+        // print(IsServer);
         if (IsServer)
         {
             // print(stageObjects);

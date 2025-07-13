@@ -237,15 +237,43 @@ public class generateRobot : MonoBehaviour
             // 各Colliderのサイズから体積を計算し、合計体積を求める
             foreach (Collider collider in colliders)
             {
-                rb.mass += CalculateVolume(collider.bounds.size);
+                rb.mass += CalculateVolume(collider);
             }
             yield return null;
         }
     }
 
-    float CalculateVolume(Vector3 size)
+    float CalculateVolume(Collider collider)
     {
-        return size.x * size.y * size.z;
+        MeshCollider meshCollider = collider as MeshCollider;
+        if (meshCollider != null && meshCollider.sharedMesh != null)
+        {
+            Mesh mesh = meshCollider.sharedMesh;
+            Vector3[] vertices = mesh.vertices;
+            int[] triangles = mesh.triangles;
+
+            float volume = 0f;
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+                Vector3 p1 = meshCollider.transform.TransformPoint(vertices[triangles[i]]);
+                Vector3 p2 = meshCollider.transform.TransformPoint(vertices[triangles[i + 1]]);
+                Vector3 p3 = meshCollider.transform.TransformPoint(vertices[triangles[i + 2]]);
+
+                volume += SignedVolumeOfTriangle(p1, p2, p3);
+            }
+            return Mathf.Abs(volume);
+        }
+        else
+        {
+            // その他のコライダータイプ（BoxCollider, SphereColliderなど）は既存のbounds計算を使用
+            return collider.bounds.size.x * collider.bounds.size.y * collider.bounds.size.z;
+        }
+    }
+
+    // 符号付き三角形体積の計算 (四面体体積の合計)
+    float SignedVolumeOfTriangle(Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        return Vector3.Dot(p1, Vector3.Cross(p2, p3)) / 6f;
     }
 
     IEnumerator NetCodepartReplace()
