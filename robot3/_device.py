@@ -55,6 +55,7 @@ class Camera:
 class Orbitcamera:
     def __init__(self, name):
         self.name = name
+wheel = Hinge("wheel")
 wheel = Motor("wheel")
 camera = Camera("camera")
 camera = Orbitcamera("camera")
