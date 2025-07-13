@@ -102,6 +102,7 @@ public class makeCollider : MonoBehaviour
                 // hidedmeshs.Add(obj.GetComponent<MeshRenderer>());
                 colliders.Add(tempCollider);
             }
+            yield return null;
 
 
             // yield return null;
@@ -365,6 +366,11 @@ public class makeCollider : MonoBehaviour
         triangles.Clear();
         for (int i = 0; i < mesh.triangles.Length; i += 3)
         {
+            if (stopwatch.ElapsedMilliseconds > 5)
+            {
+                yield return null;
+                stopwatch.Restart();
+            }
             // 新しいメッシュを作成
 
 

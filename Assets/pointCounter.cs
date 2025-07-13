@@ -40,7 +40,7 @@ public class pointCounter : NetworkBehaviour
                 text += $"{point.Key}:{point.Value}\n";
 
             }
-            print("ポイントを送信" + text);
+            // print("ポイントを送信" + text);
             UpdatePointsClientRpc(text);
         }
 
