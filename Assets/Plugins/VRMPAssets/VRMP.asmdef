@@ -23,7 +23,9 @@
         "GUID:894a6cc6ed5cd2645bb542978cbed6a9"
     ],
     "includePlatforms": [],
-    "excludePlatforms": [],
+     "excludePlatforms": [
+        "WebGL"
+    ],
     "allowUnsafeCode": false,
     "overrideReferences": false,
     "precompiledReferences": [],
