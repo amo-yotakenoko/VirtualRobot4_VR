@@ -14,11 +14,11 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         public List<robotController.Device> devices;
     }
 
-    public Response commandExecute(string commandText)
+    public Response commandExecute(CommandData command)
     {
         Response responseData = new Response();
-        print("commandText: " + commandText);
-        CommandData command = JsonUtility.FromJson<CommandData>(commandText);
+        // print("commandText: " + commandText);
+        // CommandData command = JsonUtility.FromJson<CommandData>(commandText);
         responseData.id = command.id;
 
 
@@ -54,7 +54,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         {
             Vector3 offset = new Vector3(command.x, command.y, command.z);
             print("teleport" + offset);
-            player.ownerPlayer.rescueServerRpc(offset);
+            rescueServerRpc(offset);
             // rescue.Instance.rescueStart(offset);
             responseData.value = "1";
 
@@ -64,6 +64,10 @@ public class robotController : Unity.Netcode.NetworkBehaviour
 
         return responseData;
     }
+
+
+
+
 
 
     string response(string key)
@@ -92,7 +96,16 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         {
             if (parts[0] == "info")
             {
-                var wrapper = new DeviceListWrapper { devices = viewProperty.GetAllPlayerDevices() };
+
+
+
+                var wrapper = new DeviceListWrapper
+                {
+                    devices = this.deviceList
+                  .GroupBy(d => new { d.name, d.type })
+                  .Select(g => g.First())
+                  .ToList()
+                };
 
 
                 string result = JsonUtility.ToJson(wrapper, true);
@@ -118,13 +131,13 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         setvalueServerRPC(name, property, value);
     }
 
-    [ServerRpc]
+
+    [Rpc(SendTo.Server)]
     void setvalueServerRPC(string name, string property, float value)
     {
         print(deviceList.Count + "個のデバイス");
         foreach (var device in deviceList)
         {
-            print(device.name + "の" + property + "を" + value + "に");
             if (device.name == name)
             {
                 // Device 型の power プロパティにアクセス
@@ -132,6 +145,7 @@ public class robotController : Unity.Netcode.NetworkBehaviour
                 print(powerProperty);
                 if (powerProperty != null)
                 {
+                    print(device.name + "の" + property + "を" + value + "に");
                     // motor クラスで定義された power プロパティにアクセスして値を設定
                     powerProperty.SetValue(device, value);
                 }
@@ -203,6 +217,63 @@ public class robotController : Unity.Netcode.NetworkBehaviour
         }
 
         return null;
+    }
+
+
+    [Rpc(SendTo.Server)]
+    public void rescueServerRpc(Vector3 offset)
+    {
+        foreach (var p in GetComponent<generateRobot>().partspos)
+        {
+            // p.Key.transform.localPosition = p.Value;
+            // p.Key.transform.rotation = Quaternion.identity;
+            StartCoroutine(MovePartToPosition(p.Key, p.Value + offset));
+        }
+    }
+
+    private IEnumerator MovePartToPosition(GameObject part, Vector3 targetPosition)
+    {
+
+        var enableColliders = part.GetComponentsInChildren<Collider>().Where(x => x.enabled).ToArray();
+        foreach (var col in enableColliders) col.enabled = false;
+
+
+
+
+        float moveDuration = 1.0f;
+        Vector3 startPosition = part.transform.localPosition;
+        Quaternion startRotation = part.transform.rotation;
+        Quaternion targetRotation = Quaternion.identity;
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime < moveDuration)
+        {
+            part.transform.localPosition = Vector3.Lerp(startPosition, targetPosition, elapsedTime / moveDuration);
+            part.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / moveDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+            // print(enableColliders.Count());
+        }
+
+        // 最後にターゲット位置と回転にスナップする
+        part.transform.localPosition = targetPosition;
+        part.transform.rotation = targetRotation;
+
+
+        foreach (var col in enableColliders)
+        {
+            col.enabled = true;
+
+        }
+        var enableRigidbody = part.GetComponent<Rigidbody>();
+        if (enableRigidbody != null && !enableRigidbody.isKinematic)
+        {
+
+            enableRigidbody.velocity = Vector3.zero;
+            enableRigidbody.angularVelocity = Vector3.zero;
+            enableRigidbody.Sleep();
+        }
     }
 
 

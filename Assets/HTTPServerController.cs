@@ -6,6 +6,8 @@ using System.IO;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
+using Unity.Netcode;
 
 public class HTTPServerController : MonoBehaviour
 {
@@ -138,8 +140,41 @@ public class HTTPServerController : MonoBehaviour
             {
                 // エントリの情報を表示（ここではidとレスポンスの内容を表示）
                 print($"ID: {entry.id}, Request: {entry.requestText}");
+                CommandData command = JsonUtility.FromJson<CommandData>(entry.requestText);
 
-                Response responseData = player.ownerPlayer.robotController.commandExecute(entry.requestText);
+                robotController robotController = player.ownerPlayer.robotController;
+
+
+
+
+                // "auto" や 空文字("") でないときだけ探す
+                // if (!string.IsNullOrEmpty(command.robotId) && command.robotId != "auto")
+                {
+                    print("robot探す");
+                    NetworkObject target = null;
+
+                    GameObject[] robots = GameObject.FindGameObjectsWithTag("robot");
+                    foreach (var go in robots)
+                    {
+                        var netObj = go.GetComponent<NetworkObject>();
+                        print($"{netObj.NetworkObjectId.ToString()}=={command.robotId}:{netObj.NetworkObjectId.ToString() == command.robotId}");
+                        if (netObj != null && netObj.NetworkObjectId.ToString() == command.robotId)
+                        {
+                            target = netObj;
+                            break;
+                        }
+                    }
+
+                    if (target != null)
+                    {
+                        robotController = target.GetComponent<robotController>();
+                    }
+                }
+
+
+                print("robotあった" + robotController.gameObject.name);
+                robotController.gameObject.name += "操作";
+                Response responseData = robotController.commandExecute(command);
                 responseData.id = entry.id;
                 responseQueue.Enqueue(responseData);
             }

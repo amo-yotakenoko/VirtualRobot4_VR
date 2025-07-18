@@ -168,6 +168,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
         fileHash.Value = FNV1a(data64);
         // Destroy(textMesh.gameObject);
         StartCoroutine(generate(data64));
+        GameObject.Find("robotIdView").GetComponent<TextMeshProUGUI>().text += $"ID:{NetworkObjectId}\n";
     }
 
 

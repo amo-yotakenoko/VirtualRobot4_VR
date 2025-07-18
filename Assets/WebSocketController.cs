@@ -66,8 +66,8 @@ public class WebSocketController : Unity.Netcode.NetworkBehaviour
                     print($"CommandText: {commandText}");
                     if (robotController != null)
                     {
-
-                        Response responseData = robotController.commandExecute(commandText);
+                        CommandData command = JsonUtility.FromJson<CommandData>(commandText);
+                        Response responseData = robotController.commandExecute(command);
 
                         string respoonse = JsonUtility.ToJson(responseData);
                         Server.currentConnection.sendToClient(respoonse);
@@ -136,6 +136,7 @@ public class CommandData
     public string key;
     public string value;
     public int id;
+    public string robotId;
 
     public float x;
     public float y;

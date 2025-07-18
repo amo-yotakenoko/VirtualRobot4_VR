@@ -66,7 +66,7 @@ public class player : Unity.Netcode.NetworkBehaviour
 
     }
 
-
+    //コントローラーに移動
     [Rpc(SendTo.Server)]
     public void rescueServerRpc(Vector3 offset)
     {
@@ -100,7 +100,7 @@ public class player : Unity.Netcode.NetworkBehaviour
             part.transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / moveDuration);
             elapsedTime += Time.deltaTime;
             yield return null;
-            print(enableColliders.Count());
+            // print(enableColliders.Count());
         }
 
         // 最後にターゲット位置と回転にスナップする

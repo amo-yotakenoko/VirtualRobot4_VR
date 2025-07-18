@@ -104,7 +104,7 @@ public class VRManager : MonoBehaviour
     void activeCameraSet(bool isVR)
     {
 
-        print("VR有効?" + isVR);
+        // print("VR有効?" + isVR);
         XROrigin.SetActive(isVR);
         cameraUI ui = FindObjectOfType<cameraUI>();
         if (ui != null)
