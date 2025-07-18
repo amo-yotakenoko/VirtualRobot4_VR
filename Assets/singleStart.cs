@@ -17,7 +17,12 @@ public class singleStart : MonoBehaviour
     void Start()
     {
         print("start");
+#if UNITY_EDITOR || !UNITY_WEBGL
         byte[] fileBytes = File.ReadAllBytes(filePath);
+#else
+        byte[] fileBytes = WebGLRobotUpdate.robotDictionary[filePath];
+#endif
+
         print(fileBytes.Length);
         textMesh.text = fileBytes.Length.ToString();
         // StartCoroutine(LoadGltfBinaryFromMemory(fileBytes));

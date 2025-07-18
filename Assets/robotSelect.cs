@@ -31,6 +31,7 @@ public class robotSelect : MonoBehaviour
     void Start()
     {
         if (image != null) image.enabled = false;
+#if UNITY_EDITOR || !UNITY_WEBGL
         string currentDirectory = Directory.GetCurrentDirectory();
 
         // // #if UNITY_EDITOR
@@ -38,8 +39,31 @@ public class robotSelect : MonoBehaviour
         // // #endif
         print(Directory.GetCurrentDirectory());
         StartCoroutine(GetAllFilesCoroutine(currentDirectory));
-
+#else
+        Application.ExternalCall("requestRobotList");
+#endif
     }
+
+
+#if UNITY_WEBGL
+    [Serializable]
+    public class RobotData
+    {
+        public string path;
+        public string value;
+    }
+
+    public void requestRobotList(string json)
+    {
+        print(json);
+        RobotData data = JsonUtility.FromJson<RobotData>(json);
+        print(data.path + "が存在する");
+        WebGLRobotUpdate.AddUpdateRobot(data.path, data.value);
+        createRobotPreview(data.path);
+    }
+#endif
+
+
 
     IEnumerator GetAllFilesCoroutine(string rootDirectory)
     {
@@ -129,6 +153,7 @@ public class robotSelect : MonoBehaviour
             image.enabled = true;
             image.texture = renderTexture;
         }
+#if UNITY_EDITOR || !UNITY_WEBGL
         var files = Directory.GetFiles(path)
                              .OrderByDescending(f => new FileInfo(f).LastWriteTime)
                              // .Select(f => Path.GetFileName(f))
@@ -157,7 +182,9 @@ public class robotSelect : MonoBehaviour
         }
 
         if (propertyView != null) propertyView.text = $"{path}\nmodel:{glbPath}\nsoft:{programPath}\nprogram:{processPath}";
-
+#else
+ glbFullPath = path;
+#endif
 
     }
 

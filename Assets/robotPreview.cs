@@ -25,6 +25,8 @@ public class robotPreview : MonoBehaviour
     {
         cameraSet();
 
+
+#if UNITY_EDITOR || !UNITY_WEBGL
         directoryPath = path;
         glbpath = Directory.GetFiles(path)
                                    .Where(file => Path.GetExtension(file) == ".glb")
@@ -36,11 +38,14 @@ public class robotPreview : MonoBehaviour
             yield break;
         }
         this.gameObject.name = glbpath;
-
-
         byte[] data = File.ReadAllBytes(glbpath);
+#else
+  directoryPath = path;
+  glbpath= path;
+        byte[] data = WebGLRobotUpdate.robotDictionary[path];
+#endif
         var gltf = new GltfImport();
-        Task<bool> loadTask = gltf.LoadGltfBinary(data, new Uri(path));
+        Task<bool> loadTask = gltf.LoadGltfBinary(data);
         yield return new WaitUntil(() => loadTask.IsCompleted);
         bool success = loadTask.Result;
 

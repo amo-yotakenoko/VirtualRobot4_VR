@@ -255,6 +255,7 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
             ReceiveDataServerRpc(t, length);
             if (textMesh != null)
                 textMesh.text = $"{i}/{length}\n{(int)(((float)i / length) * 100)}%";
+            print("送信中" + t);
             yield return null;
         }
         // Destroy(textMesh.gameObject);
@@ -420,6 +421,11 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
 
     string getcacheRobotFile(string hash)
     {
+
+#if  UNITY_WEBGL &&!UNITY_EDITOR
+return null;
+#endif
+
         string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), ".robotCache");
 
         // フォルダが存在しない場合は作成
@@ -529,15 +535,17 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     string FileToBase64(string filePath)
     {
         print(filePath);
+#if UNITY_EDITOR || !UNITY_WEBGL
         // ファイルが存在しない場合は例外をスローする
         if (!File.Exists(filePath))
         {
             throw new FileNotFoundException($"{filePath}指定されたファイルが見つかりません。", filePath);
         }
-
         // ファイルをバイト配列として読み込む
         byte[] fileBytes = File.ReadAllBytes(filePath);
-
+#else
+        byte[] fileBytes = WebGLRobotUpdate.robotDictionary[filePath];
+#endif
         // バイト配列をBase64文字列に変換する
         string base64String = Convert.ToBase64String(fileBytes);
 

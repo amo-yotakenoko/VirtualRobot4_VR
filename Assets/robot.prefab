@@ -219,7 +219,7 @@ MonoBehaviour:
   datacomplete: 0
   fileHash:
     m_InternalValue: 0
-  sendTextSize: 1024
+  sendTextSize: 256
   textMesh: {fileID: 0}
   NetCodePart: {fileID: 3211947520899387043, guid: d5e7c2c0abde10e43b4088c37e1bd5ed,
     type: 3}
