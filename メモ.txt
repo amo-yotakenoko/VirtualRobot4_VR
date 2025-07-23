@@ -59,3 +59,9 @@ tftp -i 192.168.101.254 put firmware\rtx1000.bin exec
 
 インストール方法はこちらにあります
 https://drive.google.com/drive/folders/17_Q4883P5FiVq7ywFhKanjWUi2mYQlgJ?usp=sharing
+
+
+
+
+
+winget install --id Cloudflare.cloudflared

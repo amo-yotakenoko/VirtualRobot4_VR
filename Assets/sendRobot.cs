@@ -424,7 +424,14 @@ public class sendRobot : Unity.Netcode.NetworkBehaviour
     {
 
 #if  UNITY_WEBGL &&!UNITY_EDITOR
-return null;
+        foreach (var entry in WebGLRobotUpdate.robotDictionary)
+        {
+            if (FNV1a(Convert.ToBase64String(entry.Value)).ToString() == hash)
+            {
+                return entry.Key;
+            }
+        }
+        return null;
 #endif
 
         string cacheFolderPath = Path.Combine(Directory.GetCurrentDirectory(), ".robotCache");
